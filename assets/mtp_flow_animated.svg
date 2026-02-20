@@ -1,0 +1,856 @@
+<svg width="1400" height="900" viewBox="0 -50 1400 950"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink">
+
+  <!-- ═══════════════════════════════════════════════════════ DEFS ═ -->
+  <defs>
+
+    <!-- Glow filter -->
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-strong" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="7" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.5"/>
+    </filter>
+
+    <!-- Gradients -->
+    <linearGradient id="bg-grad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%"   stop-color="#0d1117"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <linearGradient id="panel-grad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#1a2035"/>
+      <stop offset="100%" stop-color="#131929"/>
+    </linearGradient>
+    <linearGradient id="embed-grad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%"   stop-color="#14532d"/>
+      <stop offset="50%"  stop-color="#166534"/>
+      <stop offset="100%" stop-color="#14532d"/>
+    </linearGradient>
+
+    <!-- Marker for arrow heads -->
+    <marker id="arr-blue"  markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#60a5fa"/>
+    </marker>
+    <marker id="arr-green" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#34d399"/>
+    </marker>
+    <marker id="arr-amber" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#fbbf24"/>
+    </marker>
+    <marker id="arr-purple" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#c084fc"/>
+    </marker>
+    <marker id="arr-cyan" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#22d3ee"/>
+    </marker>
+    <marker id="arr-pink" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#f472b6"/>
+    </marker>
+    <marker id="arr-orange" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#fb923c"/>
+    </marker>
+    <marker id="arr-lime" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#a3e635"/>
+    </marker>
+    <marker id="arr-white" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#94a3b8"/>
+    </marker>
+
+    <!-- Dashed flow pattern -->
+    <pattern id="flow-pattern" width="12" height="4" patternUnits="userSpaceOnUse">
+      <rect width="8" height="2" y="1" fill="#334155" rx="1"/>
+    </pattern>
+
+  </defs>
+
+  <!-- ════════════════════════════════════════════════════ STYLES ═ -->
+  <style>
+    text { font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace; }
+    .title   { font-size:22px; font-weight:700; fill:#f1f5f9; letter-spacing:0.5px; }
+    .subtitle{ font-size:13px; fill:#64748b; }
+    .label   { font-size:11px; fill:#94a3b8; }
+    .code    { font-size:10px; fill:#7dd3fc; font-family:'SF Mono','Fira Code',monospace; }
+    .code-sm { font-size:9px;  fill:#7dd3fc; font-family:'SF Mono','Fira Code',monospace; }
+    .panel-title { font-size:13px; font-weight:700; fill:#e2e8f0; letter-spacing:0.4px; }
+    .node-label  { font-size:11px; font-weight:600; }
+    .dim-label   { font-size:9px; fill:#475569; }
+    .badge { font-size:10px; font-weight:700; }
+
+    /* pulsing glow on panel outlines */
+    @keyframes pulse-panel0 {
+      0%,100%{ stroke-opacity:0.35; } 45%{ stroke-opacity:0.9; }
+    }
+    @keyframes pulse-panel1 {
+      0%,33%,100%{ stroke-opacity:0.35; } 66%{ stroke-opacity:0.9; }
+    }
+    @keyframes pulse-panel2 {
+      0%,66%,100%{ stroke-opacity:0.35; } 88%{ stroke-opacity:0.9; }
+    }
+    .panel0-border { animation: pulse-panel0 9s linear infinite; }
+    .panel1-border { animation: pulse-panel1 9s linear infinite; }
+    .panel2-border { animation: pulse-panel2 9s linear infinite; }
+
+    /* dashed flow line on arrows */
+    @keyframes dash-flow { to { stroke-dashoffset: -24; } }
+    .flow-line { stroke-dasharray: 8 4; animation: dash-flow 0.8s linear infinite; }
+
+    /* block highlight pulse */
+    @keyframes block-hl0  { 0%,12%,100%{fill-opacity:1} 7%{fill-opacity:0.55} }
+    @keyframes block-hl1  { 0%,44%,100%{fill-opacity:1} 40%{fill-opacity:0.55} }
+    @keyframes block-hl2  { 0%,77%,100%{fill-opacity:1} 73%{fill-opacity:0.55} }
+
+    .hl-h0 { animation: block-hl0 9s linear infinite; }
+    .hl-h1 { animation: block-hl1 9s linear infinite; }
+    .hl-h2 { animation: block-hl2 9s linear infinite; }
+
+    @keyframes glow-pulse {
+      0%,100% { filter: none; } 50% { filter: url(#glow-strong); }
+    }
+
+    /* shared-weight tie animation */
+    @keyframes tie-dash { to { stroke-dashoffset: -16; } }
+    .tie-line { stroke-dasharray: 4 4; animation: tie-dash 1.2s linear infinite; }
+  </style>
+
+  <!-- ══════════════════════════════════════════════ BACKGROUND ═══ -->
+  <rect width="1400" height="900" fill="url(#bg-grad)"/>
+
+  <!-- subtle grid -->
+  <g opacity="0.04">
+    <line x1="0" y1="0" x2="1400" y2="0" stroke="#94a3b8"/>
+    <line x1="0" y1="100" x2="1400" y2="100" stroke="#94a3b8"/>
+    <line x1="0" y1="200" x2="1400" y2="200" stroke="#94a3b8"/>
+    <line x1="0" y1="300" x2="1400" y2="300" stroke="#94a3b8"/>
+    <line x1="0" y1="400" x2="1400" y2="400" stroke="#94a3b8"/>
+    <line x1="0" y1="500" x2="1400" y2="500" stroke="#94a3b8"/>
+    <line x1="0" y1="600" x2="1400" y2="600" stroke="#94a3b8"/>
+    <line x1="0" y1="700" x2="1400" y2="700" stroke="#94a3b8"/>
+    <line x1="0" y1="800" x2="1400" y2="800" stroke="#94a3b8"/>
+  </g>
+
+  <!-- ═══════════════════════════════════════════════════ TITLE ═══ -->
+  <text x="700" y="42" text-anchor="middle" class="title">Multi-Token Prediction — SimpleMTP Architecture</text>
+  <text x="700" y="62" text-anchor="middle" class="subtitle">
+    Predicts D=3 future tokens per position via chained transformer heads
+  </text>
+
+  <!-- ════════════════════════════════════ TOKEN SEQUENCE ROW ══════ -->
+  <!-- Labels -->
+  <text x="700" y="90" text-anchor="middle" class="label">Input Token Sequence — Sliding Window at position i</text>
+
+  <!-- Token t_i  (feeds base hidden h0_seq → h_prev for Head 0) -->
+  <g id="tok-i">
+    <rect x="70" y="100" width="130" height="36" rx="8" fill="#1e3a5f" stroke="#60a5fa" stroke-width="2"/>
+    <text x="135" y="123" text-anchor="middle" class="node-label" fill="#60a5fa">t ᵢ</text>
+    <text x="225" y="121" text-anchor="start" class="dim-label">position i</text>
+    <!-- highlight border pulse -->
+    <rect x="70" y="100" width="115" height="36" rx="8" fill="none" stroke="#60a5fa" stroke-width="1.5" opacity="0.3">
+      <animate attributeName="stroke-width" values="1.5;3;1.5" dur="3s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.3;0.7;0.3" dur="3s" repeatCount="indefinite"/>
+    </rect>
+  </g>
+
+  <!-- Ellipsis -->
+  <text x="217" y="122" text-anchor="middle" fill="#475569" font-size="18">· · ·</text>
+
+  <!-- Token t_{i+1}  (fed into Head 0 as tok_embed) -->
+  <g id="tok-i1">
+    <rect x="295" y="100" width="130" height="36" rx="8" fill="#1a2e1a" stroke="#34d399" stroke-width="1.5"/>
+    <text x="360" y="123" text-anchor="middle" class="node-label" fill="#34d399">t ᵢ₊₁</text>
+  </g>
+
+  <!-- Ellipsis -->
+  <text x="582" y="122" text-anchor="middle" fill="#475569" font-size="18">· · ·</text>
+
+  <!-- Token t_{i+2}  (fed into Head 1) -->
+  <g id="tok-i2">
+    <rect x="755" y="100" width="130" height="36" rx="8" fill="#1a2e1a" stroke="#34d399" stroke-width="1.5"/>
+    <text x="820" y="123" text-anchor="middle" class="node-label" fill="#34d399">t ᵢ₊₂</text>
+  </g>
+
+  <!-- Ellipsis -->
+  <text x="1042" y="122" text-anchor="middle" fill="#475569" font-size="18">· · ·</text>
+
+  <!-- Token t_{i+3}  (fed into Head 2) -->
+  <g id="tok-i3">
+    <rect x="1215" y="100" width="130" height="36" rx="8" fill="#1a2e1a" stroke="#34d399" stroke-width="1.5"/>
+    <text x="1280" y="123" text-anchor="middle" class="node-label" fill="#34d399">t ᵢ₊₃</text>
+  </g>
+
+  <!-- ═════════════════════════════════ SHARED EMBEDDING BAR ═══════ -->
+  <rect x="40" y="215" width="1320" height="42" rx="6"
+        fill="url(#embed-grad)" stroke="#16a34a" stroke-width="1.2" opacity="0.9"/>
+  <text x="700" y="233" text-anchor="middle" font-size="11" font-weight="700" fill="#86efac">
+    Shared Embedding Matrix   embed(·)  ⟶  ℝᵈ     [self.embed = nn.Embedding(vocab_size, d_model)]
+  </text>
+  <text x="700" y="247" text-anchor="middle" class="dim-label">★ weights tied with unembed (self.unembed.weight = self.embed.weight)</text>
+
+  <!-- Static arrows: token → embedding bar (will be animated by particles, these are static guides) -->
+  <line x1="127" y1="136" x2="127" y2="215" stroke="#60a5fa" stroke-width="1.5" opacity="0.4" class="flow-line"/>
+  <line x1="352" y1="136" x2="352" y2="215" stroke="#34d399" stroke-width="1.5" opacity="0.4" class="flow-line"/>
+  <line x1="812" y1="136" x2="812" y2="215" stroke="#34d399" stroke-width="1.5" opacity="0.4" class="flow-line"/>
+  <line x1="1272" y1="136" x2="1272" y2="215" stroke="#34d399" stroke-width="1.5" opacity="0.4" class="flow-line"/>
+
+  <!-- Static arrows: embedding bar → panel inputs -->
+  <line x1="127" y1="257" x2="127" y2="368" stroke="#60a5fa" stroke-width="1.5" opacity="0.4" marker-end="url(#arr-blue)" class="flow-line"/>
+  <line x1="352" y1="257" x2="352" y2="368" stroke="#34d399" stroke-width="1.5" opacity="0.4" marker-end="url(#arr-green)" class="flow-line"/>
+  <line x1="812" y1="257" x2="812" y2="368" stroke="#34d399" stroke-width="1.5" opacity="0.4" marker-end="url(#arr-green)" class="flow-line"/>
+  <line x1="1272" y1="257" x2="1272" y2="368" stroke="#34d399" stroke-width="1.5" opacity="0.4" marker-end="url(#arr-green)" class="flow-line"/>
+
+
+  <!-- ══════════════════════════════════════════════════ PANEL 0 ═══ -->
+  <!-- px=55, py=310, w=370, h=530 -->
+
+  <!-- Panel background & border -->
+  <rect x="55" y="310" width="370" height="530" rx="10"
+        fill="url(#panel-grad)" stroke="#3b4f6b" stroke-width="1.5" opacity="0.95" class="panel0-border"/>
+  <rect x="55" y="310" width="370" height="530" rx="10"
+        fill="none" stroke="#60a5fa" stroke-width="0.5" opacity="0.2"/>
+
+  <!-- Head label -->
+  <rect x="145" y="300" width="190" height="28" rx="6" fill="#1e3a5f" stroke="#60a5fa" stroke-width="1"/>
+  <text x="240" y="320" text-anchor="middle" class="panel-title" fill="#93c5fd">
+    MTP Head  k = 0
+  </text>
+
+  <!-- h_prev box (receives initial h0_seq from position i) -->
+  <rect x="70" y="368" width="115" height="52" rx="6" fill="#1f2d1f" stroke="#fbbf24" stroke-width="1.5" class="hl-h0"/>
+  <text x="127" y="384" text-anchor="middle" class="node-label" fill="#fbbf24" font-size="10">h_prev</text>
+  <text x="127" y="396" text-anchor="middle" class="code-sm">(B, d_model)</text>
+  <text x="127" y="410" text-anchor="middle" class="dim-label">= h0_seq[:, i, :]</text>
+
+  <!-- tok_embed box -->
+  <rect x="295" y="368" width="115" height="52" rx="6" fill="#1a2e20" stroke="#34d399" stroke-width="1.5" class="hl-h0"/>
+  <text x="352" y="384" text-anchor="middle" class="node-label" fill="#34d399" font-size="10">tok_embed</text>
+  <text x="352" y="396" text-anchor="middle" class="code-sm">(B, d_model)</text>
+  <text x="352" y="410" text-anchor="middle" class="dim-label">= embeds[:, i+1, :]</text>
+
+  <!-- Arrows: h_prev right → concat, tok_embed left → concat -->
+  <path d="M 185 385 Q 240 385 240 440" fill="none" stroke="#fbbf24" stroke-width="1.5" opacity="0.6" marker-end="url(#arr-amber)" class="flow-line"/>
+  <path d="M 295 385 Q 240 385 240 440" fill="none" stroke="#34d399" stroke-width="1.5" opacity="0.6" marker-end="url(#arr-green)" class="flow-line"/>
+
+  <!-- "cat(·,·)" concat node -->
+  <circle cx="240" cy="458" r="18" fill="#312e81" stroke="#c084fc" stroke-width="2" class="hl-h0"/>
+  <text x="240" y="462" text-anchor="middle" class="node-label" fill="#c084fc" font-size="11">⊕</text>
+  <text x="264" y="452" text-anchor="start" class="dim-label">cat(·,·)</text>
+  <text x="264" y="465" text-anchor="start" class="dim-label">→(B, 2·d)</text>
+
+  <!-- Arrow: concat → Linear -->
+  <line x1="240" y1="476" x2="240" y2="495" stroke="#c084fc" stroke-width="1.5" marker-end="url(#arr-purple)" opacity="0.7"/>
+
+  <!-- Linear(2d → d) -->
+  <rect x="160" y="495" width="160" height="40" rx="6" fill="#1e1b4b" stroke="#818cf8" stroke-width="1.5" class="hl-h0"/>
+  <text x="240" y="513" text-anchor="middle" class="node-label" fill="#818cf8" font-size="10">Linear(2·d → d)</text>
+  <text x="240" y="526" text-anchor="middle" class="code-sm">self.projections[0]</text>
+
+  <!-- Arrow: Linear → RMSNorm -->
+  <line x1="240" y1="535" x2="240" y2="545" stroke="#818cf8" stroke-width="1.5" marker-end="url(#arr-purple)" opacity="0.7"/>
+
+  <!-- RMSNorm -->
+  <rect x="175" y="545" width="130" height="40" rx="6" fill="#0c2d3a" stroke="#22d3ee" stroke-width="1.5" class="hl-h0"/>
+  <text x="240" y="563" text-anchor="middle" class="node-label" fill="#22d3ee" font-size="10">RMSNorm</text>
+  <text x="240" y="575" text-anchor="middle" class="code-sm">self.RMSNorm(x)</text>
+
+  <!-- Arrow: RMSNorm → Transformer -->
+  <line x1="240" y1="585" x2="240" y2="597" stroke="#22d3ee" stroke-width="1.5" marker-end="url(#arr-cyan)" opacity="0.7"/>
+
+  <!-- TransformerEncoderLayer -->
+  <rect x="155" y="597" width="170" height="46" rx="6" fill="#2d1535" stroke="#f472b6" stroke-width="2" class="hl-h0"/>
+  <text x="240" y="614" text-anchor="middle" class="node-label" fill="#f472b6" font-size="10">TransformerEncoderLayer</text>
+  <text x="240" y="626" text-anchor="middle" class="code-sm">self.transformer[0]</text>
+  <text x="240" y="636" text-anchor="middle" class="dim-label">nhead=2  →  x  (B,d)</text>
+
+  <!-- Branch node (x output = new h_prev) -->
+  <circle cx="240" cy="654" r="7" fill="#f472b6" stroke="#fff" stroke-width="1.5" class="hl-h0"/>
+
+  <!-- Arrow: transformer bottom → branch -->
+  <line x1="240" y1="639" x2="240" y2="647" stroke="#f472b6" stroke-width="1.5" opacity="0.8"/>
+
+  <!-- Branch left label: x -->
+  <text x="224" y="654" text-anchor="end" fill="#f472b6" font-size="10" font-weight="700">x₀</text>
+
+  <!-- Arrow from branch → right (chain exit to Head 1) -->
+  <line x1="247" y1="654" x2="425" y2="654" stroke="#fbbf24" stroke-width="1.8"
+        stroke-dasharray="6 3" opacity="0.7" marker-end="url(#arr-amber)"/>
+  <text x="340" y="645" text-anchor="middle" class="dim-label" fill="#fbbf24">chain → Head 1</text>
+
+  <!-- Arrow: branch → unembed -->
+  <line x1="240" y1="661" x2="240" y2="669" stroke="#f472b6" stroke-width="1.5" opacity="0.8"/>
+
+  <!-- Unembed (shared with embed) -->
+  <rect x="175" y="665" width="130" height="40" rx="6" fill="#3a1a00" stroke="#fb923c" stroke-width="1.5" class="hl-h0"/>
+  <text x="240" y="683" text-anchor="middle" class="node-label" fill="#fb923c" font-size="10">Unembed  (tied ★)</text>
+  <text x="240" y="695" text-anchor="middle" class="code-sm">self.unembed(x)</text>
+
+  <!-- Arrow: unembed → logit -->
+  <line x1="240" y1="701" x2="240" y2="718" stroke="#fb923c" stroke-width="1.5" marker-end="url(#arr-orange)" opacity="0.7"/>
+
+  <!-- Logit output -->
+  <rect x="185" y="718" width="110" height="34" rx="8" fill="#14260e" stroke="#a3e635" stroke-width="2" class="hl-h0"/>
+  <text x="240" y="733" text-anchor="middle" class="node-label" fill="#a3e635" font-size="10">logit₀</text>
+  <text x="240" y="744" text-anchor="middle" class="code-sm">(B, vocab_size)</text>
+  <text x="300" y="735" text-anchor="start" class="dim-label" fill="#86efac">→ predicts t ᵢ₊₁</text>
+
+  <!-- Output arrow -->
+  <line x1="240" y1="752" x2="240" y2="768" stroke="#a3e635" stroke-width="2" marker-end="url(#arr-lime)" opacity="0.8"/>
+  <polygon points="232,768 240,782 248,768" fill="#a3e635" opacity="0.9"/>
+  <text x="240" y="795" text-anchor="middle" fill="#a3e635" font-size="9">CE Loss₀</text>
+
+
+  <!-- ══════════════════════════════════════════════════ PANEL 1 ═══ -->
+  <!-- px=515, py=310, w=370, h=530 -->
+
+  <rect x="515" y="310" width="370" height="530" rx="10"
+        fill="url(#panel-grad)" stroke="#3b4f6b" stroke-width="1.5" opacity="0.95" class="panel1-border"/>
+  <rect x="515" y="310" width="370" height="530" rx="10"
+        fill="none" stroke="#c084fc" stroke-width="0.5" opacity="0.2"/>
+
+  <rect x="605" y="300" width="190" height="28" rx="6" fill="#25153d" stroke="#c084fc" stroke-width="1"/>
+  <text x="700" y="320" text-anchor="middle" class="panel-title" fill="#d8b4fe">
+    MTP Head  k = 1
+  </text>
+
+  <!-- h_prev (= x₀ from Head 0 chain) -->
+  <rect x="530" y="368" width="115" height="52" rx="6" fill="#2a1f00" stroke="#fbbf24" stroke-width="1.5" class="hl-h1"/>
+  <text x="587" y="384" text-anchor="middle" class="node-label" fill="#fbbf24" font-size="10">h_prev</text>
+  <text x="587" y="396" text-anchor="middle" class="code-sm">(B, d_model)</text>
+  <text x="587" y="410" text-anchor="middle" class="dim-label">= x₀  (from Head 0)</text>
+
+  <rect x="755" y="368" width="115" height="52" rx="6" fill="#1a2e20" stroke="#34d399" stroke-width="1.5" class="hl-h1"/>
+  <text x="812" y="384" text-anchor="middle" class="node-label" fill="#34d399" font-size="10">tok_embed</text>
+  <text x="812" y="396" text-anchor="middle" class="code-sm">(B, d_model)</text>
+  <text x="812" y="410" text-anchor="middle" class="dim-label">= embeds[:, i+2, :]</text>
+
+  <path d="M 645 385 Q 700 385 700 440" fill="none" stroke="#fbbf24" stroke-width="1.5" opacity="0.6" marker-end="url(#arr-amber)" class="flow-line"/>
+  <path d="M 755 385 Q 700 385 700 440" fill="none" stroke="#34d399" stroke-width="1.5" opacity="0.6" marker-end="url(#arr-green)" class="flow-line"/>
+
+  <circle cx="700" cy="458" r="18" fill="#312e81" stroke="#c084fc" stroke-width="2" class="hl-h1"/>
+  <text x="700" y="462" text-anchor="middle" class="node-label" fill="#c084fc" font-size="11">⊕</text>
+  <text x="724" y="452" text-anchor="start" class="dim-label">cat(·,·)</text>
+  <text x="724" y="465" text-anchor="start" class="dim-label">→(B, 2·d)</text>
+
+  <line x1="700" y1="476" x2="700" y2="495" stroke="#c084fc" stroke-width="1.5" marker-end="url(#arr-purple)" opacity="0.7"/>
+
+  <rect x="620" y="495" width="160" height="40" rx="6" fill="#1e1b4b" stroke="#818cf8" stroke-width="1.5" class="hl-h1"/>
+  <text x="700" y="513" text-anchor="middle" class="node-label" fill="#818cf8" font-size="10">Linear(2·d → d)</text>
+  <text x="700" y="526" text-anchor="middle" class="code-sm">self.projections[1]</text>
+
+  <line x1="700" y1="535" x2="700" y2="545" stroke="#818cf8" stroke-width="1.5" marker-end="url(#arr-purple)" opacity="0.7"/>
+
+  <rect x="635" y="545" width="130" height="40" rx="6" fill="#0c2d3a" stroke="#22d3ee" stroke-width="1.5" class="hl-h1"/>
+  <text x="700" y="563" text-anchor="middle" class="node-label" fill="#22d3ee" font-size="10">RMSNorm</text>
+  <text x="700" y="575" text-anchor="middle" class="code-sm">self.RMSNorm(x)</text>
+
+  <line x1="700" y1="585" x2="700" y2="597" stroke="#22d3ee" stroke-width="1.5" marker-end="url(#arr-cyan)" opacity="0.7"/>
+
+  <rect x="615" y="597" width="170" height="46" rx="6" fill="#2d1535" stroke="#f472b6" stroke-width="2" class="hl-h1"/>
+  <text x="700" y="614" text-anchor="middle" class="node-label" fill="#f472b6" font-size="10">TransformerEncoderLayer</text>
+  <text x="700" y="626" text-anchor="middle" class="code-sm">self.transformer[1]</text>
+  <text x="700" y="636" text-anchor="middle" class="dim-label">nhead=2  →  x  (B,d)</text>
+
+  <circle cx="700" cy="654" r="7" fill="#f472b6" stroke="#fff" stroke-width="1.5" class="hl-h1"/>
+  <line x1="700" y1="639" x2="700" y2="647" stroke="#f472b6" stroke-width="1.5" opacity="0.8"/>
+  <text x="684" y="654" text-anchor="end" fill="#f472b6" font-size="10" font-weight="700">x₁</text>
+
+  <line x1="707" y1="654" x2="885" y2="654" stroke="#fbbf24" stroke-width="1.8"
+        stroke-dasharray="6 3" opacity="0.7" marker-end="url(#arr-amber)"/>
+  <text x="800" y="645" text-anchor="middle" class="dim-label" fill="#fbbf24">chain → Head 2</text>
+
+  <line x1="700" y1="661" x2="700" y2="669" stroke="#f472b6" stroke-width="1.5" opacity="0.8"/>
+
+  <rect x="635" y="665" width="130" height="40" rx="6" fill="#3a1a00" stroke="#fb923c" stroke-width="1.5" class="hl-h1"/>
+  <text x="700" y="683" text-anchor="middle" class="node-label" fill="#fb923c" font-size="10">Unembed  (tied ★)</text>
+  <text x="700" y="695" text-anchor="middle" class="code-sm">self.unembed(x)</text>
+
+  <line x1="700" y1="701" x2="700" y2="718" stroke="#fb923c" stroke-width="1.5" marker-end="url(#arr-orange)" opacity="0.7"/>
+
+  <rect x="645" y="718" width="110" height="34" rx="8" fill="#14260e" stroke="#a3e635" stroke-width="2" class="hl-h1"/>
+  <text x="700" y="733" text-anchor="middle" class="node-label" fill="#a3e635" font-size="10">logit₁</text>
+  <text x="700" y="744" text-anchor="middle" class="code-sm">(B, vocab_size)</text>
+  <text x="760" y="735" text-anchor="start" class="dim-label" fill="#86efac">→ predicts t ᵢ₊₂</text>
+
+  <line x1="700" y1="752" x2="700" y2="768" stroke="#a3e635" stroke-width="2" marker-end="url(#arr-lime)" opacity="0.8"/>
+  <polygon points="692,768 700,782 708,768" fill="#a3e635" opacity="0.9"/>
+  <text x="700" y="795" text-anchor="middle" fill="#a3e635" font-size="9">CE Loss₁</text>
+
+
+  <!-- ══════════════════════════════════════════════════ PANEL 2 ═══ -->
+  <!-- px=975, py=310, w=370, h=530 -->
+
+  <rect x="975" y="310" width="370" height="530" rx="10"
+        fill="url(#panel-grad)" stroke="#3b4f6b" stroke-width="1.5" opacity="0.95" class="panel2-border"/>
+  <rect x="975" y="310" width="370" height="530" rx="10"
+        fill="none" stroke="#f472b6" stroke-width="0.5" opacity="0.2"/>
+
+  <rect x="1065" y="300" width="190" height="28" rx="6" fill="#2d1535" stroke="#f472b6" stroke-width="1"/>
+  <text x="1160" y="320" text-anchor="middle" class="panel-title" fill="#f9a8d4">
+    MTP Head  k = 2
+  </text>
+
+  <!-- h_prev (= x₁ from Head 1 chain) -->
+  <rect x="990" y="368" width="115" height="52" rx="6" fill="#2a1f00" stroke="#fbbf24" stroke-width="1.5" class="hl-h2"/>
+  <text x="1047" y="384" text-anchor="middle" class="node-label" fill="#fbbf24" font-size="10">h_prev</text>
+  <text x="1047" y="396" text-anchor="middle" class="code-sm">(B, d_model)</text>
+  <text x="1047" y="410" text-anchor="middle" class="dim-label">= x₁  (from Head 1)</text>
+
+  <rect x="1215" y="368" width="115" height="52" rx="6" fill="#1a2e20" stroke="#34d399" stroke-width="1.5" class="hl-h2"/>
+  <text x="1272" y="384" text-anchor="middle" class="node-label" fill="#34d399" font-size="10">tok_embed</text>
+  <text x="1272" y="396" text-anchor="middle" class="code-sm">(B, d_model)</text>
+  <text x="1272" y="410" text-anchor="middle" class="dim-label">= embeds[:, i+3, :]</text>
+
+  <path d="M 1105 385 Q 1160 385 1160 440" fill="none" stroke="#fbbf24" stroke-width="1.5" opacity="0.6" marker-end="url(#arr-amber)" class="flow-line"/>
+  <path d="M 1215 385 Q 1160 385 1160 440" fill="none" stroke="#34d399" stroke-width="1.5" opacity="0.6" marker-end="url(#arr-green)" class="flow-line"/>
+
+  <circle cx="1160" cy="458" r="18" fill="#312e81" stroke="#c084fc" stroke-width="2" class="hl-h2"/>
+  <text x="1160" y="462" text-anchor="middle" class="node-label" fill="#c084fc" font-size="11">⊕</text>
+  <text x="1184" y="452" text-anchor="start" class="dim-label">cat(·,·)</text>
+  <text x="1184" y="465" text-anchor="start" class="dim-label">→(B, 2·d)</text>
+
+  <line x1="1160" y1="476" x2="1160" y2="495" stroke="#c084fc" stroke-width="1.5" marker-end="url(#arr-purple)" opacity="0.7"/>
+
+  <rect x="1080" y="495" width="160" height="40" rx="6" fill="#1e1b4b" stroke="#818cf8" stroke-width="1.5" class="hl-h2"/>
+  <text x="1160" y="513" text-anchor="middle" class="node-label" fill="#818cf8" font-size="10">Linear(2·d → d)</text>
+  <text x="1160" y="526" text-anchor="middle" class="code-sm">self.projections[2]</text>
+
+  <line x1="1160" y1="535" x2="1160" y2="545" stroke="#818cf8" stroke-width="1.5" marker-end="url(#arr-purple)" opacity="0.7"/>
+
+  <rect x="1095" y="545" width="130" height="40" rx="6" fill="#0c2d3a" stroke="#22d3ee" stroke-width="1.5" class="hl-h2"/>
+  <text x="1160" y="563" text-anchor="middle" class="node-label" fill="#22d3ee" font-size="10">RMSNorm</text>
+  <text x="1160" y="575" text-anchor="middle" class="code-sm">self.RMSNorm(x)</text>
+
+  <line x1="1160" y1="585" x2="1160" y2="597" stroke="#22d3ee" stroke-width="1.5" marker-end="url(#arr-cyan)" opacity="0.7"/>
+
+  <rect x="1075" y="597" width="170" height="46" rx="6" fill="#2d1535" stroke="#f472b6" stroke-width="2" class="hl-h2"/>
+  <text x="1160" y="614" text-anchor="middle" class="node-label" fill="#f472b6" font-size="10">TransformerEncoderLayer</text>
+  <text x="1160" y="626" text-anchor="middle" class="code-sm">self.transformer[2]</text>
+  <text x="1160" y="636" text-anchor="middle" class="dim-label">nhead=2  →  x  (B,d)</text>
+
+  <circle cx="1160" cy="654" r="7" fill="#f472b6" stroke="#fff" stroke-width="1.5" class="hl-h2"/>
+  <line x1="1160" y1="639" x2="1160" y2="647" stroke="#f472b6" stroke-width="1.5" opacity="0.8"/>
+  <text x="1144" y="654" text-anchor="end" fill="#f472b6" font-size="10" font-weight="700">x₂</text>
+
+  <line x1="1160" y1="661" x2="1160" y2="669" stroke="#f472b6" stroke-width="1.5" opacity="0.8"/>
+
+  <rect x="1095" y="665" width="130" height="40" rx="6" fill="#3a1a00" stroke="#fb923c" stroke-width="1.5" class="hl-h2"/>
+  <text x="1160" y="683" text-anchor="middle" class="node-label" fill="#fb923c" font-size="10">Unembed  (tied ★)</text>
+  <text x="1160" y="695" text-anchor="middle" class="code-sm">self.unembed(x)</text>
+
+  <line x1="1160" y1="701" x2="1160" y2="718" stroke="#fb923c" stroke-width="1.5" marker-end="url(#arr-orange)" opacity="0.7"/>
+
+  <rect x="1105" y="718" width="110" height="34" rx="8" fill="#14260e" stroke="#a3e635" stroke-width="2" class="hl-h2"/>
+  <text x="1160" y="733" text-anchor="middle" class="node-label" fill="#a3e635" font-size="10">logit₂</text>
+  <text x="1160" y="744" text-anchor="middle" class="code-sm">(B, vocab_size)</text>
+  <text x="1220" y="735" text-anchor="start" class="dim-label" fill="#86efac">→ predicts t ᵢ₊₃</text>
+
+  <line x1="1160" y1="752" x2="1160" y2="768" stroke="#a3e635" stroke-width="2" marker-end="url(#arr-lime)" opacity="0.8"/>
+  <polygon points="1152,768 1160,782 1168,768" fill="#a3e635" opacity="0.9"/>
+  <text x="1160" y="795" text-anchor="middle" fill="#a3e635" font-size="9">CE Loss₂</text>
+
+
+  <!-- ════════════════════════════════════ CHAIN ARROWS (H0→H1, H1→H2) ═ -->
+
+  <!-- Static dashed chain paths (background guide) -->
+  <path d="M 425 654 C 470 654 515 530 587 402" fill="none"
+        stroke="#fbbf24" stroke-width="1.5" opacity="0.4" class="flow-line"/>
+  <path d="M 885 654 C 930 654 975 530 1047 402" fill="none"
+        stroke="#fbbf24" stroke-width="1.5" opacity="0.4" class="flow-line"/>
+
+  <!-- "h_prev chain: x₀ → Head 1" label arc -->
+  <text x="470" y="520" text-anchor="middle" fill="#fbbf24" font-size="9" opacity="0.7" transform="rotate(-55,470,520)">
+    h_prev = x₀
+  </text>
+  <text x="930" y="520" text-anchor="middle" fill="#fbbf24" font-size="9" opacity="0.7" transform="rotate(-55,930,520)">
+    h_prev = x₁
+  </text>
+
+
+  <!-- ════════════════════════════════════════ TOTAL LOSS BOX ═══════ -->
+  <rect x="490" y="808" width="420" height="44" rx="8" fill="#0f2a0f" stroke="#a3e635" stroke-width="1.5" opacity="0.9"/>
+  <text x="700" y="826" text-anchor="middle" class="node-label" fill="#a3e635" font-size="11">Training Loss = Σ CE(logit_k, target_k)  for k ∈ {0,1,2}</text>
+  <text x="700" y="843" text-anchor="middle" fill="#6b8e23" font-size="9">Backprop through all heads simultaneously</text>
+
+  <!-- Loss arrows converging -->
+  <line x1="240" y1="800" x2="570" y2="818" stroke="#a3e635" stroke-width="1.5" opacity="0.5" class="flow-line"/>
+  <line x1="700" y1="800" x2="700" y2="808" stroke="#a3e635" stroke-width="1.5" opacity="0.5" class="flow-line"/>
+  <line x1="1160" y1="800" x2="830" y2="818" stroke="#a3e635" stroke-width="1.5" opacity="0.5" class="flow-line"/>
+
+
+  <!-- ════════════════════════════════════════════════ LEGEND ═══════ -->
+  <g transform="translate(30, 875)">
+    <rect width="12" height="12" rx="2" fill="#1e3a5f" stroke="#60a5fa" stroke-width="1.5" y="-10"/>
+    <text x="17" y="0" class="label" fill="#60a5fa">Position token</text>
+
+    <rect x="120" width="12" height="12" rx="2" fill="#1a2e20" stroke="#34d399" stroke-width="1.5" y="-10"/>
+    <text x="137" y="0" class="label" fill="#34d399">Future embed</text>
+
+    <rect x="245" width="12" height="12" rx="2" fill="#1f2d1f" stroke="#fbbf24" stroke-width="1.5" y="-10"/>
+    <text x="262" y="0" class="label" fill="#fbbf24">h_prev (hidden)</text>
+
+    <rect x="375" width="12" height="12" rx="2" fill="#1e1b4b" stroke="#818cf8" stroke-width="1.5" y="-10"/>
+    <text x="392" y="0" class="label" fill="#818cf8">Linear projection</text>
+
+    <rect x="510" width="12" height="12" rx="2" fill="#0c2d3a" stroke="#22d3ee" stroke-width="1.5" y="-10"/>
+    <text x="527" y="0" class="label" fill="#22d3ee">RMSNorm</text>
+
+    <rect x="615" width="12" height="12" rx="2" fill="#2d1535" stroke="#f472b6" stroke-width="1.5" y="-10"/>
+    <text x="632" y="0" class="label" fill="#f472b6">Transformer block</text>
+
+    <rect x="755" width="12" height="12" rx="2" fill="#3a1a00" stroke="#fb923c" stroke-width="1.5" y="-10"/>
+    <text x="772" y="0" class="label" fill="#fb923c">Unembed (★ tied)</text>
+
+    <rect x="895" width="12" height="12" rx="2" fill="#14260e" stroke="#a3e635" stroke-width="1.5" y="-10"/>
+    <text x="912" y="0" class="label" fill="#a3e635">Logit output</text>
+
+    <line x1="1005" y1="-5" x2="1040" y2="-5" stroke="#fbbf24" stroke-width="2" stroke-dasharray="5 3"/>
+    <text x="1045" y="0" class="label" fill="#fbbf24">h_prev chain</text>
+
+    <text x="1150" y="0" class="label" fill="#94a3b8">★ = shared weights between embed &amp; unembed</text>
+  </g>
+
+
+  <!-- ══════════════════════════════════════ ANIMATION PARTICLES ═════ -->
+  <!--
+    Animation timing scheme (total cycle = 9s, loops forever):
+      Head 0 active:  0s – 3s
+      Head 1 active:  3s – 6s
+      Head 2 active:  6s – 9s
+    
+    For each particle: keyPoints="0;0;1;1" with matching keyTimes
+    to make the particle "wait" then "travel" then "stay" (invisible after).
+    Opacity animation hides the particle when not traveling.
+    
+    t_start and t_end are in the [0,1] normalized (÷9) scale.
+  -->
+
+  <!-- ── HEAD 0 PARTICLES ── -->
+
+  <!-- P1: t_i → embed bar → h_prev_0  (t=0.00→0.40s  →  norm 0.000→0.044) -->
+  <g>
+    <animateTransform attributeName="opacity" from="0" to="0" dur="9s"/>
+    <circle r="5" fill="#60a5fa" filter="url(#glow)" opacity="0">
+      <animateMotion dur="9s" repeatCount="indefinite"
+        keyPoints="0;0;1;1" keyTimes="0;0.001;0.044;1" calcMode="linear"
+        path="M 127 136 L 127 368"/>
+      <animate attributeName="opacity" dur="9s" repeatCount="indefinite"
+        values="0;1;1;0;0" keyTimes="0;0.001;0.044;0.050;1"/>
+    </circle>
+  </g>
+
+  <!-- P2: t_{i+1} → embed bar → tok_embed_0  (t=0.00→0.40s) -->
+  <circle r="5" fill="#34d399" filter="url(#glow)" opacity="0">
+    <animateMotion dur="9s" repeatCount="indefinite"
+      keyPoints="0;0;1;1" keyTimes="0;0.001;0.044;1" calcMode="linear"
+      path="M 352 136 L 352 368"/>
+    <animate attributeName="opacity" dur="9s" repeatCount="indefinite"
+      values="0;1;1;0;0" keyTimes="0;0.001;0.044;0.050;1"/>
+  </circle>
+
+  <!-- P3: h_prev_0 → concat_0  (t=0.40→0.70s  →  0.044→0.078) -->
+  <circle r="4.5" fill="#fbbf24" filter="url(#glow)" opacity="0">
+    <animateMotion dur="9s" repeatCount="indefinite"
+      keyPoints="0;0;1;1" keyTimes="0;0.044;0.078;1" calcMode="linear"
+      path="M 185 387 Q 240 387 240 440"/>
+    <animate attributeName="opacity" dur="9s" repeatCount="indefinite"
+      values="0;1;1;0;0" keyTimes="0;0.044;0.078;0.085;1"/>
+  </circle>
+
+  <!-- P4: tok_embed_0 → concat_0  (t=0.40→0.70s) -->
+  <circle r="4.5" fill="#34d399" filter="url(#glow)" opacity="0">
+    <animateMotion dur="9s" repeatCount="indefinite"
+      keyPoints="0;0;1;1" keyTimes="0;0.044;0.078;1" calcMode="linear"
+      path="M 295 387 Q 240 387 240 440"/>
+    <animate attributeName="opacity" dur="9s" repeatCount="indefinite"
+      values="0;1;1;0;0" keyTimes="0;0.044;0.078;0.085;1"/>
+  </circle>
+
+  <!-- P5: concat_0 → Linear  (t=0.70→0.90s  →  0.078→0.100) -->
+  <circle r="5" fill="#c084fc" filter="url(#glow)" opacity="0">
+    <animateMotion dur="9s" repeatCount="indefinite"
+      keyPoints="0;0;1;1" keyTimes="0;0.078;0.100;1" calcMode="linear"
+      path="M 240 476 L 240 495"/>
+    <animate attributeName="opacity" dur="9s" repeatCount="indefinite"
+      values="0;1;1;0;0" keyTimes="0;0.078;0.100;0.108;1"/>
+  </circle>
+
+  <!-- P6: Linear → RMSNorm  (t=0.90→1.10s  →  0.100→0.122) -->
+  <circle r="5" fill="#818cf8" filter="url(#glow)" opacity="0">
+    <animateMotion dur="9s" repeatCount="indefinite"
+      keyPoints="0;0;1;1" keyTimes="0;0.100;0.122;1" calcMode="linear"
+      path="M 240 529 L 240 545"/>
+    <animate attributeName="opacity" dur="9s" repeatCount="indefinite"
+      values="0;1;1;0;0" keyTimes="0;0.100;0.122;0.130;1"/>
+  </circle>
+
+  <!-- P7: RMSNorm → Transformer  (t=1.10→1.30s  →  0.122→0.144) -->
+  <circle r="5" fill="#22d3ee" filter="url(#glow)" opacity="0">
+    <animateMotion dur="9s" repeatCount="indefinite"
+      keyPoints="0;0;1;1" keyTimes="0;0.122;0.144;1" calcMode="linear"
+      path="M 240 577 L 240 597"/>
+    <animate attributeName="opacity" dur="9s" repeatCount="indefinite"
+      values="0;1;1;0;0" keyTimes="0;0.122;0.144;0.152;1"/>
+  </circle>
+
+  <!-- P8: Transformer → branch  (t=1.30→1.50s  →  0.144→0.167) -->
+  <circle r="4" fill="#f472b6" filter="url(#glow)" opacity="0">
+    <animateMotion dur="9s" repeatCount="indefinite"
+      keyPoints="0;0;1;1" keyTimes="0;0.144;0.167;1" calcMode="linear"
+      path="M 240 641 L 240 654"/>
+    <animate attributeName="opacity" dur="9s" repeatCount="indefinite"
+      values="0;1;1;0;0" keyTimes="0;0.144;0.167;0.175;1"/>
+  </circle>
+
+  <!-- P9: branch → unembed  (t=1.50→1.70s  →  0.167→0.189) -->
+  <circle r="4.5" fill="#f472b6" filter="url(#glow)" opacity="0">
+    <animateMotion dur="9s" repeatCount="indefinite"
+      keyPoints="0;0;1;1" keyTimes="0;0.167;0.189;1" calcMode="linear"
+      path="M 240 661 L 240 669"/>
+    <animate attributeName="opacity" dur="9s" repeatCount="indefinite"
+      values="0;1;1;0;0" keyTimes="0;0.167;0.189;0.197;1"/>
+  </circle>
+
+  <!-- P10: unembed → logit  (t=1.70→2.00s  →  0.189→0.222) -->
+  <circle r="5" fill="#fb923c" filter="url(#glow)" opacity="0">
+    <animateMotion dur="9s" repeatCount="indefinite"
+      keyPoints="0;0;1;1" keyTimes="0;0.189;0.222;1" calcMode="linear"
+      path="M 240 701 L 240 718"/>
+    <animate attributeName="opacity" dur="9s" repeatCount="indefinite"
+      values="0;1;1;0;0" keyTimes="0;0.189;0.222;0.230;1"/>
+  </circle>
+
+  <!-- P11: chain x₀ → h_prev_1  (t=1.50→2.80s  →  0.167→0.311) -->
+  <circle r="6" fill="#fbbf24" filter="url(#glow-strong)" opacity="0">
+    <animateMotion dur="9s" repeatCount="indefinite"
+      keyPoints="0;0;1;1" keyTimes="0;0.167;0.311;1" calcMode="linear"
+      path="M 425 654 C 470 654 587 530 587 402"/>
+    <animate attributeName="opacity" dur="9s" repeatCount="indefinite"
+      values="0;1;1;0;0" keyTimes="0;0.167;0.311;0.320;1"/>
+  </circle>
+
+  <!-- Logit output particle (logit₀ flash) -->
+  <circle r="6" fill="#a3e635" filter="url(#glow-strong)" opacity="0">
+    <animateMotion dur="9s" repeatCount="indefinite"
+      keyPoints="0;0;1;1" keyTimes="0;0.222;0.266;1" calcMode="linear"
+      path="M 240 752 L 240 782"/>
+    <animate attributeName="opacity" dur="9s" repeatCount="indefinite"
+      values="0;1;1;0;0" keyTimes="0;0.222;0.266;0.275;1"/>
+  </circle>
+
+
+  <!-- ── HEAD 1 PARTICLES (offset 0.333) ── -->
+
+  <!-- P1: t_{i+2} → embed → tok_embed_1  (t=3.00→3.40s  →  0.333→0.378) -->
+  <circle r="5" fill="#34d399" filter="url(#glow)" opacity="0">
+    <animateMotion dur="9s" repeatCount="indefinite"
+      keyPoints="0;0;1;1" keyTimes="0;0.334;0.378;1" calcMode="linear"
+      path="M 812 136 L 812 368"/>
+    <animate attributeName="opacity" dur="9s" repeatCount="indefinite"
+      values="0;1;1;0;0" keyTimes="0;0.334;0.378;0.384;1"/>
+  </circle>
+
+  <!-- P3: h_prev_1 → concat_1  (t=3.40→3.70s  →  0.378→0.411) -->
+  <circle r="4.5" fill="#fbbf24" filter="url(#glow)" opacity="0">
+    <animateMotion dur="9s" repeatCount="indefinite"
+      keyPoints="0;0;1;1" keyTimes="0;0.378;0.411;1" calcMode="linear"
+      path="M 645 387 Q 700 387 700 440"/>
+    <animate attributeName="opacity" dur="9s" repeatCount="indefinite"
+      values="0;1;1;0;0" keyTimes="0;0.378;0.411;0.418;1"/>
+  </circle>
+
+  <!-- P4: tok_embed_1 → concat_1  (same timing) -->
+  <circle r="4.5" fill="#34d399" filter="url(#glow)" opacity="0">
+    <animateMotion dur="9s" repeatCount="indefinite"
+      keyPoints="0;0;1;1" keyTimes="0;0.378;0.411;1" calcMode="linear"
+      path="M 755 387 Q 700 387 700 440"/>
+    <animate attributeName="opacity" dur="9s" repeatCount="indefinite"
+      values="0;1;1;0;0" keyTimes="0;0.378;0.411;0.418;1"/>
+  </circle>
+
+  <!-- P5: concat_1 → Linear  (0.411→0.433) -->
+  <circle r="5" fill="#c084fc" filter="url(#glow)" opacity="0">
+    <animateMotion dur="9s" repeatCount="indefinite"
+      keyPoints="0;0;1;1" keyTimes="0;0.411;0.433;1" calcMode="linear"
+      path="M 700 476 L 700 495"/>
+    <animate attributeName="opacity" dur="9s" repeatCount="indefinite"
+      values="0;1;1;0;0" keyTimes="0;0.411;0.433;0.441;1"/>
+  </circle>
+
+  <!-- P6: Linear → RMSNorm  (0.433→0.456) -->
+  <circle r="5" fill="#818cf8" filter="url(#glow)" opacity="0">
+    <animateMotion dur="9s" repeatCount="indefinite"
+      keyPoints="0;0;1;1" keyTimes="0;0.433;0.456;1" calcMode="linear"
+      path="M 700 529 L 700 545"/>
+    <animate attributeName="opacity" dur="9s" repeatCount="indefinite"
+      values="0;1;1;0;0" keyTimes="0;0.433;0.456;0.463;1"/>
+  </circle>
+
+  <!-- P7: RMSNorm → Transformer  (0.456→0.478) -->
+  <circle r="5" fill="#22d3ee" filter="url(#glow)" opacity="0">
+    <animateMotion dur="9s" repeatCount="indefinite"
+      keyPoints="0;0;1;1" keyTimes="0;0.456;0.478;1" calcMode="linear"
+      path="M 700 577 L 700 597"/>
+    <animate attributeName="opacity" dur="9s" repeatCount="indefinite"
+      values="0;1;1;0;0" keyTimes="0;0.456;0.478;0.486;1"/>
+  </circle>
+
+  <!-- P8: Transformer → branch  (0.478→0.500) -->
+  <circle r="4" fill="#f472b6" filter="url(#glow)" opacity="0">
+    <animateMotion dur="9s" repeatCount="indefinite"
+      keyPoints="0;0;1;1" keyTimes="0;0.478;0.500;1" calcMode="linear"
+      path="M 700 641 L 700 654"/>
+    <animate attributeName="opacity" dur="9s" repeatCount="indefinite"
+      values="0;1;1;0;0" keyTimes="0;0.478;0.500;0.508;1"/>
+  </circle>
+
+  <!-- P9: branch → unembed  (0.500→0.522) -->
+  <circle r="4.5" fill="#f472b6" filter="url(#glow)" opacity="0">
+    <animateMotion dur="9s" repeatCount="indefinite"
+      keyPoints="0;0;1;1" keyTimes="0;0.500;0.522;1" calcMode="linear"
+      path="M 700 661 L 700 669"/>
+    <animate attributeName="opacity" dur="9s" repeatCount="indefinite"
+      values="0;1;1;0;0" keyTimes="0;0.500;0.522;0.530;1"/>
+  </circle>
+
+  <!-- P10: unembed → logit  (0.522→0.556) -->
+  <circle r="5" fill="#fb923c" filter="url(#glow)" opacity="0">
+    <animateMotion dur="9s" repeatCount="indefinite"
+      keyPoints="0;0;1;1" keyTimes="0;0.522;0.556;1" calcMode="linear"
+      path="M 700 701 L 700 718"/>
+    <animate attributeName="opacity" dur="9s" repeatCount="indefinite"
+      values="0;1;1;0;0" keyTimes="0;0.522;0.556;0.563;1"/>
+  </circle>
+
+  <!-- P11: chain x₁ → h_prev_2  (0.500→0.644) -->
+  <circle r="6" fill="#fbbf24" filter="url(#glow-strong)" opacity="0">
+    <animateMotion dur="9s" repeatCount="indefinite"
+      keyPoints="0;0;1;1" keyTimes="0;0.500;0.644;1" calcMode="linear"
+      path="M 885 654 C 930 654 1047 530 1047 402"/>
+    <animate attributeName="opacity" dur="9s" repeatCount="indefinite"
+      values="0;1;1;0;0" keyTimes="0;0.500;0.644;0.652;1"/>
+  </circle>
+
+  <!-- logit₁ output -->
+  <circle r="6" fill="#a3e635" filter="url(#glow-strong)" opacity="0">
+    <animateMotion dur="9s" repeatCount="indefinite"
+      keyPoints="0;0;1;1" keyTimes="0;0.556;0.600;1" calcMode="linear"
+      path="M 700 752 L 700 782"/>
+    <animate attributeName="opacity" dur="9s" repeatCount="indefinite"
+      values="0;1;1;0;0" keyTimes="0;0.556;0.600;0.608;1"/>
+  </circle>
+
+
+  <!-- ── HEAD 2 PARTICLES (offset 0.667) ── -->
+
+  <!-- P1: t_{i+3} → embed → tok_embed_2  (0.667→0.711) -->
+  <circle r="5" fill="#34d399" filter="url(#glow)" opacity="0">
+    <animateMotion dur="9s" repeatCount="indefinite"
+      keyPoints="0;0;1;1" keyTimes="0;0.668;0.711;1" calcMode="linear"
+      path="M 1272 136 L 1272 368"/>
+    <animate attributeName="opacity" dur="9s" repeatCount="indefinite"
+      values="0;1;1;0;0" keyTimes="0;0.668;0.711;0.718;1"/>
+  </circle>
+
+  <!-- P3: h_prev_2 → concat_2  (0.711→0.744) -->
+  <circle r="4.5" fill="#fbbf24" filter="url(#glow)" opacity="0">
+    <animateMotion dur="9s" repeatCount="indefinite"
+      keyPoints="0;0;1;1" keyTimes="0;0.711;0.744;1" calcMode="linear"
+      path="M 1105 387 Q 1160 387 1160 440"/>
+    <animate attributeName="opacity" dur="9s" repeatCount="indefinite"
+      values="0;1;1;0;0" keyTimes="0;0.711;0.744;0.752;1"/>
+  </circle>
+
+  <!-- P4: tok_embed_2 → concat_2  (same) -->
+  <circle r="4.5" fill="#34d399" filter="url(#glow)" opacity="0">
+    <animateMotion dur="9s" repeatCount="indefinite"
+      keyPoints="0;0;1;1" keyTimes="0;0.711;0.744;1" calcMode="linear"
+      path="M 1215 387 Q 1160 387 1160 440"/>
+    <animate attributeName="opacity" dur="9s" repeatCount="indefinite"
+      values="0;1;1;0;0" keyTimes="0;0.711;0.744;0.752;1"/>
+  </circle>
+
+  <!-- P5: concat_2 → Linear  (0.744→0.767) -->
+  <circle r="5" fill="#c084fc" filter="url(#glow)" opacity="0">
+    <animateMotion dur="9s" repeatCount="indefinite"
+      keyPoints="0;0;1;1" keyTimes="0;0.744;0.767;1" calcMode="linear"
+      path="M 1160 476 L 1160 495"/>
+    <animate attributeName="opacity" dur="9s" repeatCount="indefinite"
+      values="0;1;1;0;0" keyTimes="0;0.744;0.767;0.774;1"/>
+  </circle>
+
+  <!-- P6: Linear → RMSNorm  (0.767→0.789) -->
+  <circle r="5" fill="#818cf8" filter="url(#glow)" opacity="0">
+    <animateMotion dur="9s" repeatCount="indefinite"
+      keyPoints="0;0;1;1" keyTimes="0;0.767;0.789;1" calcMode="linear"
+      path="M 1160 529 L 1160 545"/>
+    <animate attributeName="opacity" dur="9s" repeatCount="indefinite"
+      values="0;1;1;0;0" keyTimes="0;0.767;0.789;0.797;1"/>
+  </circle>
+
+  <!-- P7: RMSNorm → Transformer  (0.789→0.811) -->
+  <circle r="5" fill="#22d3ee" filter="url(#glow)" opacity="0">
+    <animateMotion dur="9s" repeatCount="indefinite"
+      keyPoints="0;0;1;1" keyTimes="0;0.789;0.811;1" calcMode="linear"
+      path="M 1160 577 L 1160 597"/>
+    <animate attributeName="opacity" dur="9s" repeatCount="indefinite"
+      values="0;1;1;0;0" keyTimes="0;0.789;0.811;0.819;1"/>
+  </circle>
+
+  <!-- P8: Transformer → branch  (0.811→0.833) -->
+  <circle r="4" fill="#f472b6" filter="url(#glow)" opacity="0">
+    <animateMotion dur="9s" repeatCount="indefinite"
+      keyPoints="0;0;1;1" keyTimes="0;0.811;0.833;1" calcMode="linear"
+      path="M 1160 641 L 1160 654"/>
+    <animate attributeName="opacity" dur="9s" repeatCount="indefinite"
+      values="0;1;1;0;0" keyTimes="0;0.811;0.833;0.841;1"/>
+  </circle>
+
+  <!-- P9: branch → unembed  (0.833→0.856) -->
+  <circle r="4.5" fill="#f472b6" filter="url(#glow)" opacity="0">
+    <animateMotion dur="9s" repeatCount="indefinite"
+      keyPoints="0;0;1;1" keyTimes="0;0.833;0.856;1" calcMode="linear"
+      path="M 1160 661 L 1160 669"/>
+    <animate attributeName="opacity" dur="9s" repeatCount="indefinite"
+      values="0;1;1;0;0" keyTimes="0;0.833;0.856;0.863;1"/>
+  </circle>
+
+  <!-- P10: unembed → logit  (0.856→0.889) -->
+  <circle r="5" fill="#fb923c" filter="url(#glow)" opacity="0">
+    <animateMotion dur="9s" repeatCount="indefinite"
+      keyPoints="0;0;1;1" keyTimes="0;0.856;0.889;1" calcMode="linear"
+      path="M 1160 701 L 1160 718"/>
+    <animate attributeName="opacity" dur="9s" repeatCount="indefinite"
+      values="0;1;1;0;0" keyTimes="0;0.856;0.889;0.897;1"/>
+  </circle>
+
+  <!-- logit₂ output -->
+  <circle r="6" fill="#a3e635" filter="url(#glow-strong)" opacity="0">
+    <animateMotion dur="9s" repeatCount="indefinite"
+      keyPoints="0;0;1;1" keyTimes="0;0.889;0.933;1" calcMode="linear"
+      path="M 1160 752 L 1160 782"/>
+    <animate attributeName="opacity" dur="9s" repeatCount="indefinite"
+      values="0;1;1;0;0" keyTimes="0;0.889;0.933;0.940;1"/>
+  </circle>
+
+  <!-- ═══════════════════════════════════ FLOWING CHAIN INDICATOR ═══ -->
+  <!-- Large animated dot sweeping across ALL three panels for a "wave" effect -->
+  <circle r="8" fill="none" stroke="#fbbf24" stroke-width="1.5" filter="url(#glow)" opacity="0">
+    <animateMotion dur="9s" repeatCount="indefinite"
+      keyPoints="0;0;0.5;0.5;1;1" keyTimes="0;0.001;0.100;0.333;0.435;1"
+      calcMode="linear"
+      path="M 240 458 L 240 654 C 470 654 587 530 587 392 L 587 458 L 587 654 C 930 654 1047 530 1047 392 L 1047 458 L 1047 654"/>
+    <animate attributeName="opacity" dur="9s" repeatCount="indefinite"
+      values="0;0.5;0.5;0;0;0.5;0.5;0;0;0.5;0.5;0;0"
+      keyTimes="0;0.001;0.100;0.110;0.333;0.334;0.435;0.445;0.667;0.668;0.755;0.765;1"/>
+  </circle>
+
+  <!-- Credit -->
+  <text x="1380" y="20" text-anchor="end" font-family="'SF Mono','Fira Code','Consolas',monospace"
+        font-size="11" font-weight="700" fill="#64748b">Illustrated By Chandan11248</text>
+
+</svg>
+

@@ -1,0 +1,651 @@
+<svg width="1400" height="1050" viewBox="0 0 1400 1050"
+  xmlns="http://www.w3.org/2000/svg">
+
+  <!-- ═══════════════════════════════════════════════════ DEFS ════ -->
+  <defs>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-strong" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="7" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+
+    <!-- Gradients -->
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0d1117"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <linearGradient id="panel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1a2035"/>
+      <stop offset="100%" stop-color="#131929"/>
+    </linearGradient>
+    <linearGradient id="router-grad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#312e81"/>
+      <stop offset="100%" stop-color="#1e1b4b"/>
+    </linearGradient>
+    <linearGradient id="shared-grad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#14532d"/>
+      <stop offset="100%" stop-color="#052e16"/>
+    </linearGradient>
+    <linearGradient id="add-grad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#713f12"/>
+      <stop offset="100%" stop-color="#422006"/>
+    </linearGradient>
+
+    <!-- Arrow markers -->
+    <marker id="a-blue" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#60a5fa"/></marker>
+    <marker id="a-green" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#34d399"/></marker>
+    <marker id="a-purple" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#c084fc"/></marker>
+    <marker id="a-amber" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#fbbf24"/></marker>
+    <marker id="a-pink" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#f472b6"/></marker>
+    <marker id="a-cyan" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#22d3ee"/></marker>
+    <marker id="a-orange" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#fb923c"/></marker>
+    <marker id="a-lime" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#a3e635"/></marker>
+    <marker id="a-red" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#f87171"/></marker>
+    <marker id="a-white" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#94a3b8"/></marker>
+  </defs>
+
+  <!-- ═══════════════════════════════════════════════ STYLES ══════ -->
+  <style>
+    text { font-family: 'SF Mono','Fira Code','Consolas',monospace; }
+    .title   { font-size:22px; font-weight:700; fill:#f1f5f9; letter-spacing:.5px; }
+    .sub     { font-size:13px; fill:#64748b; }
+    .label   { font-size:11px; fill:#94a3b8; }
+    .code    { font-size:10px; fill:#7dd3fc; }
+    .code-sm { font-size:9px;  fill:#7dd3fc; }
+    .dim     { font-size:9px;  fill:#475569; }
+    .ptitle  { font-size:13px; font-weight:700; fill:#e2e8f0; letter-spacing:.4px; }
+    .nlbl    { font-size:11px; font-weight:600; }
+    .nlbl-sm { font-size:10px; font-weight:600; }
+
+    @keyframes dash  { to { stroke-dashoffset:-24; } }
+    .flow { stroke-dasharray:8 4; animation: dash .8s linear infinite; }
+
+    /* Phase pulse — 12s cycle, 3 phases */
+    @keyframes ph1 { 0%,8%{fill-opacity:1} 4%{fill-opacity:.5} 33%,100%{fill-opacity:1} }
+    @keyframes ph2 { 0%,33%{fill-opacity:1} 37%{fill-opacity:.5} 66%,100%{fill-opacity:1} }
+    @keyframes ph3 { 0%,66%{fill-opacity:1} 70%{fill-opacity:.5} 100%{fill-opacity:1} }
+    .hl1 { animation: ph1 12s linear infinite; }
+    .hl2 { animation: ph2 12s linear infinite; }
+    .hl3 { animation: ph3 12s linear infinite; }
+
+    @keyframes border-p { 0%,100%{stroke-opacity:.3} 50%{stroke-opacity:.85} }
+    .bp { animation: border-p 4s ease-in-out infinite; }
+  </style>
+
+  <!-- ═══════════════════════════════════════════ BACKGROUND ══════ -->
+  <rect width="1400" height="1050" fill="url(#bg)"/>
+  <g opacity=".04">
+    <line x1="0" y1="100" x2="1400" y2="100" stroke="#94a3b8"/>
+    <line x1="0" y1="200" x2="1400" y2="200" stroke="#94a3b8"/>
+    <line x1="0" y1="300" x2="1400" y2="300" stroke="#94a3b8"/>
+    <line x1="0" y1="400" x2="1400" y2="400" stroke="#94a3b8"/>
+    <line x1="0" y1="500" x2="1400" y2="500" stroke="#94a3b8"/>
+    <line x1="0" y1="600" x2="1400" y2="600" stroke="#94a3b8"/>
+    <line x1="0" y1="700" x2="1400" y2="700" stroke="#94a3b8"/>
+    <line x1="0" y1="800" x2="1400" y2="800" stroke="#94a3b8"/>
+    <line x1="0" y1="900" x2="1400" y2="900" stroke="#94a3b8"/>
+    <line x1="0" y1="1000" x2="1400" y2="1000" stroke="#94a3b8"/>
+  </g>
+
+  <!-- ════════════════════════════════════════════ TITLE ══════════ -->
+  <text x="700" y="40" text-anchor="middle" class="title">DeepSeek-V3 — Mixture of Experts (MoE) Architecture</text>
+  <text x="700" y="60" text-anchor="middle" class="sub">
+    Shared Experts (always ON) + Routed Experts (Top-K gating) → Residual Add
+  </text>
+
+  <!-- ════════════════════════════════════ INPUT ══════════════════ -->
+  <rect x="560" y="80" width="280" height="42" rx="8" fill="#1e3a5f" stroke="#60a5fa" stroke-width="2">
+    <animate attributeName="stroke-width" values="2;3;2" dur="3s" repeatCount="indefinite"/>
+  </rect>
+  <text x="700" y="98" text-anchor="middle" class="nlbl" fill="#60a5fa">Input  x</text>
+  <text x="700" y="113" text-anchor="middle" class="code-sm">[B, S, d_model]   (d_model=1024)</text>
+
+  <!-- flat label -->
+  <text x="700" y="136" text-anchor="middle" class="dim">x_flat = x.reshape(-1, D)   →   [N, D]   where N = B·S</text>
+
+  <!-- ══════════════════════════════ FORK ═════════════════════════ -->
+  <!-- vertical line from input down to fork point -->
+  <line x1="700" y1="122" x2="700" y2="155" stroke="#60a5fa" stroke-width="1.5" opacity=".5"/>
+  <!-- fork circle -->
+  <circle cx="700" cy="160" r="6" fill="#1e3a5f" stroke="#60a5fa" stroke-width="1.5"/>
+  <!-- left branch (shared) -->
+  <path d="M 694 160 L 280 160 L 280 195" fill="none" stroke="#34d399" stroke-width="1.5" marker-end="url(#a-green)" class="flow" opacity=".6"/>
+  <!-- right branch (router) -->
+  <path d="M 706 160 L 1100 160 L 1100 195" fill="none" stroke="#c084fc" stroke-width="1.5" marker-end="url(#a-purple)" class="flow" opacity=".6"/>
+  <!-- label -->
+  <text x="430" y="155" text-anchor="middle" class="dim" fill="#34d399">Shared path (all tokens)</text>
+  <text x="930" y="155" text-anchor="middle" class="dim" fill="#c084fc">Router path (selective)</text>
+
+  <!-- residual skip connection label -->
+  <path d="M 700 166 L 700 895" fill="none" stroke="#60a5fa" stroke-width="1.5" opacity=".3" class="flow"/>
+  <text x="715" y="530" text-anchor="start" class="dim" fill="#60a5fa" transform="rotate(90,715,530)">residual skip (x)</text>
+
+
+  <!-- ══════════════════════════════════ SHARED EXPERTS PANEL ═════ -->
+  <rect x="80" y="195" width="400" height="275" rx="10" fill="url(#panel)" stroke="#166534" stroke-width="1.5" opacity=".95" class="bp"/>
+
+  <!-- panel header -->
+  <rect x="180" y="188" width="200" height="24" rx="6" fill="url(#shared-grad)" stroke="#22c55e" stroke-width="1"/>
+  <text x="280" y="204" text-anchor="middle" class="ptitle" fill="#86efac">Shared Experts</text>
+
+  <text x="280" y="228" text-anchor="middle" class="label" fill="#34d399">n_shared_exp = 2  (Always ON for every token)</text>
+
+  <!-- Shared Expert 0 -->
+  <rect x="115" y="250" width="155" height="100" rx="8" fill="#0a1f0a" stroke="#22c55e" stroke-width="1.5" class="hl1"/>
+  <text x="192" y="272" text-anchor="middle" class="nlbl-sm" fill="#22c55e">Shared Expert 0</text>
+  <text x="192" y="290" text-anchor="middle" class="code-sm">fc1: Linear(d, h)</text>
+  <text x="192" y="304" text-anchor="middle" class="code-sm">GELU activation</text>
+  <text x="192" y="318" text-anchor="middle" class="code-sm">fc2: Linear(h, d)</text>
+  <text x="192" y="336" text-anchor="middle" class="dim">(bias=False)</text>
+
+  <!-- Shared Expert 1 -->
+  <rect x="290" y="250" width="155" height="100" rx="8" fill="#0a1f0a" stroke="#22c55e" stroke-width="1.5" class="hl1"/>
+  <text x="367" y="272" text-anchor="middle" class="nlbl-sm" fill="#22c55e">Shared Expert 1</text>
+  <text x="367" y="290" text-anchor="middle" class="code-sm">fc1: Linear(d, h)</text>
+  <text x="367" y="304" text-anchor="middle" class="code-sm">GELU activation</text>
+  <text x="367" y="318" text-anchor="middle" class="code-sm">fc2: Linear(h, d)</text>
+  <text x="367" y="336" text-anchor="middle" class="dim">(bias=False)</text>
+
+  <!-- arrows from experts down to sum -->
+  <line x1="192" y1="350" x2="192" y2="380" stroke="#22c55e" stroke-width="1.5" marker-end="url(#a-green)" opacity=".6"/>
+  <line x1="367" y1="350" x2="367" y2="380" stroke="#22c55e" stroke-width="1.5" marker-end="url(#a-green)" opacity=".6"/>
+
+  <!-- shared Σ circle -->
+  <circle cx="280" cy="400" r="18" fill="#14532d" stroke="#34d399" stroke-width="2"/>
+  <text x="280" y="405" text-anchor="middle" class="nlbl" fill="#34d399" font-size="14">Σ</text>
+  <text x="304" y="393" text-anchor="start" class="dim" fill="#34d399">sum experts</text>
+
+  <path d="M 192 388 Q 192 400 262 400" fill="none" stroke="#22c55e" stroke-width="1" opacity=".4"/>
+  <path d="M 367 388 Q 367 400 298 400" fill="none" stroke="#22c55e" stroke-width="1" opacity=".4"/>
+
+  <!-- shared_out label -->
+  <text x="280" y="437" text-anchor="middle" class="code" fill="#34d399">shared_out  [B, S, D]</text>
+
+  <!-- arrow from shared panel down -->
+  <line x1="280" y1="418" x2="280" y2="445" stroke="#34d399" stroke-width="1.5" opacity=".5"/>
+  <line x1="280" y1="445" x2="280" y2="895" stroke="#34d399" stroke-width="1.5" opacity=".4" class="flow"/>
+  <line x1="280" y1="895" x2="630" y2="895" stroke="#34d399" stroke-width="1.5" marker-end="url(#a-green)" opacity=".6" class="flow"/>
+
+
+  <!-- ══════════════════════════════════ ROUTER PANEL ═════════════ -->
+  <rect x="660" y="195" width="680" height="135" rx="10" fill="url(#router-grad)" stroke="#7c3aed" stroke-width="1.5" opacity=".95" class="bp"/>
+
+  <rect x="910" y="188" width="180" height="24" rx="6" fill="#312e81" stroke="#a78bfa" stroke-width="1"/>
+  <text x="1000" y="204" text-anchor="middle" class="ptitle" fill="#c4b5fd">Router (Gatekeeper)</text>
+
+  <!-- Step 1: logits -->
+  <rect x="680" y="225" width="260" height="38" rx="6" fill="#1e1b4b" stroke="#818cf8" stroke-width="1.5" class="hl2"/>
+  <text x="810" y="241" text-anchor="middle" class="nlbl-sm" fill="#818cf8">logits = F.linear(x_flat, centroids)</text>
+  <text x="810" y="256" text-anchor="middle" class="code-sm">[N, E]  →  dot product with centroids [E, D]</text>
+
+  <!-- + bias -->
+  <text x="945" y="241" text-anchor="start" class="nlbl-sm" fill="#fbbf24">+ bias</text>
+  <text x="945" y="256" text-anchor="start" class="dim" fill="#fbbf24">online update</text>
+
+  <!-- Step 2: topk -->
+  <rect x="970" y="225" width="200" height="38" rx="6" fill="#1e1b4b" stroke="#f472b6" stroke-width="1.5" class="hl2"/>
+  <text x="1070" y="241" text-anchor="middle" class="nlbl-sm" fill="#f472b6">torch.topk(logits, k=8)</text>
+  <text x="1070" y="256" text-anchor="middle" class="code-sm">[N, 8]  topk_logits, topk_idx</text>
+
+  <!-- Step 3: softmax gate -->
+  <rect x="1190" y="225" width="130" height="38" rx="6" fill="#1e1b4b" stroke="#22d3ee" stroke-width="1.5" class="hl2"/>
+  <text x="1255" y="241" text-anchor="middle" class="nlbl-sm" fill="#22d3ee">Softmax</text>
+  <text x="1255" y="256" text-anchor="middle" class="code-sm">gate [N, 8]</text>
+
+  <!-- arrows between router steps -->
+  <line x1="940" y1="244" x2="970" y2="244" stroke="#818cf8" stroke-width="1.5" marker-end="url(#a-pink)" opacity=".8" class="flow"/>
+  <line x1="1170" y1="244" x2="1190" y2="244" stroke="#f472b6" stroke-width="1.5" marker-end="url(#a-cyan)" opacity=".8" class="flow"/>
+
+  <!-- centroids param label -->
+  <text x="825" y="285" text-anchor="middle" class="code-sm" fill="#a78bfa">self.centroids: nn.Parameter [n_routed_exp, d_model]</text>
+  <text x="825" y="298" text-anchor="middle" class="dim" fill="#a78bfa">init: normal_(std=d_model⁻⁰·⁵)</text>
+
+  <!-- router output lines down to experts -->
+  <text x="1000" y="305" text-anchor="middle" class="dim" fill="#f472b6">topk_idx selects which experts</text>
+  <text x="1000" y="317" text-anchor="middle" class="dim" fill="#22d3ee">gate weights scale expert outputs</text>
+
+
+  <!-- ══════════════════════════════════  PANEL ═════ -->
+  <rect x="660" y="355" width="680" height="365" rx="10" fill="url(#panel)" stroke="#3b4f6b" stroke-width="1.5" opacity=".95"/>
+
+  <rect x="870" y="348" width="260" height="24" rx="6" fill="#2d1535" stroke="#f472b6" stroke-width="1"/>
+  <text x="1000" y="364" text-anchor="middle" class="ptitle" fill="#f9a8d4">Routed Experts  (n=16, top_k=8)</text>
+
+  <text x="1000" y="388" text-anchor="middle" class="label" fill="#f472b6">Only selected experts are activated per token — sparse computation</text>
+
+  <!-- Expert grid: 2 rows × 8 columns -->
+  <!-- Row 1: Experts 0-7 -->
+  <g id="experts-row1">
+    <!-- Expert 0 -->
+    <rect x="685" y="400" width="70" height="68" rx="6" fill="#1a0f2e" stroke="#94a3b8" stroke-width="1" opacity=".5"/>
+    <text x="720" y="418" text-anchor="middle" class="nlbl-sm" fill="#94a3b8" opacity=".5">E₀</text>
+    <text x="720" y="434" text-anchor="middle" class="dim">fc1→GELU</text>
+    <text x="720" y="446" text-anchor="middle" class="dim">→fc2</text>
+    <text x="720" y="460" text-anchor="middle" class="dim" fill="#475569">inactive</text>
+
+    <!-- Expert 1 — ACTIVE -->
+    <rect x="763" y="400" width="70" height="68" rx="6" fill="#2d1535" stroke="#f472b6" stroke-width="2" class="hl2"/>
+    <text x="798" y="418" text-anchor="middle" class="nlbl-sm" fill="#f472b6">E₁</text>
+    <text x="798" y="434" text-anchor="middle" class="dim" fill="#f9a8d4">fc1→GELU</text>
+    <text x="798" y="446" text-anchor="middle" class="dim" fill="#f9a8d4">→fc2</text>
+    <text x="798" y="460" text-anchor="middle" class="dim" fill="#f472b6">★ active</text>
+
+    <!-- Expert 2 -->
+    <rect x="841" y="400" width="70" height="68" rx="6" fill="#1a0f2e" stroke="#94a3b8" stroke-width="1" opacity=".5"/>
+    <text x="876" y="418" text-anchor="middle" class="nlbl-sm" fill="#94a3b8" opacity=".5">E₂</text>
+    <text x="876" y="434" text-anchor="middle" class="dim">fc1→GELU</text>
+    <text x="876" y="446" text-anchor="middle" class="dim">→fc2</text>
+    <text x="876" y="460" text-anchor="middle" class="dim" fill="#475569">inactive</text>
+
+    <!-- Expert 3 — ACTIVE -->
+    <rect x="919" y="400" width="70" height="68" rx="6" fill="#2d1535" stroke="#f472b6" stroke-width="2" class="hl2"/>
+    <text x="954" y="418" text-anchor="middle" class="nlbl-sm" fill="#f472b6">E₃</text>
+    <text x="954" y="434" text-anchor="middle" class="dim" fill="#f9a8d4">fc1→GELU</text>
+    <text x="954" y="446" text-anchor="middle" class="dim" fill="#f9a8d4">→fc2</text>
+    <text x="954" y="460" text-anchor="middle" class="dim" fill="#f472b6">★ active</text>
+
+    <!-- Expert 4 — ACTIVE -->
+    <rect x="997" y="400" width="70" height="68" rx="6" fill="#2d1535" stroke="#f472b6" stroke-width="2" class="hl2"/>
+    <text x="1032" y="418" text-anchor="middle" class="nlbl-sm" fill="#f472b6">E₄</text>
+    <text x="1032" y="434" text-anchor="middle" class="dim" fill="#f9a8d4">fc1→GELU</text>
+    <text x="1032" y="446" text-anchor="middle" class="dim" fill="#f9a8d4">→fc2</text>
+    <text x="1032" y="460" text-anchor="middle" class="dim" fill="#f472b6">★ active</text>
+
+    <!-- Expert 5 -->
+    <rect x="1075" y="400" width="70" height="68" rx="6" fill="#1a0f2e" stroke="#94a3b8" stroke-width="1" opacity=".5"/>
+    <text x="1110" y="418" text-anchor="middle" class="nlbl-sm" fill="#94a3b8" opacity=".5">E₅</text>
+    <text x="1110" y="434" text-anchor="middle" class="dim">fc1→GELU</text>
+    <text x="1110" y="446" text-anchor="middle" class="dim">→fc2</text>
+    <text x="1110" y="460" text-anchor="middle" class="dim" fill="#475569">inactive</text>
+
+    <!-- Expert 6 — ACTIVE -->
+    <rect x="1153" y="400" width="70" height="68" rx="6" fill="#2d1535" stroke="#f472b6" stroke-width="2" class="hl2"/>
+    <text x="1188" y="418" text-anchor="middle" class="nlbl-sm" fill="#f472b6">E₆</text>
+    <text x="1188" y="434" text-anchor="middle" class="dim" fill="#f9a8d4">fc1→GELU</text>
+    <text x="1188" y="446" text-anchor="middle" class="dim" fill="#f9a8d4">→fc2</text>
+    <text x="1188" y="460" text-anchor="middle" class="dim" fill="#f472b6">★ active</text>
+
+    <!-- Expert 7 -->
+    <rect x="1231" y="400" width="70" height="68" rx="6" fill="#1a0f2e" stroke="#94a3b8" stroke-width="1" opacity=".5"/>
+    <text x="1266" y="418" text-anchor="middle" class="nlbl-sm" fill="#94a3b8" opacity=".5">E₇</text>
+    <text x="1266" y="434" text-anchor="middle" class="dim">fc1→GELU</text>
+    <text x="1266" y="446" text-anchor="middle" class="dim">→fc2</text>
+    <text x="1266" y="460" text-anchor="middle" class="dim" fill="#475569">inactive</text>
+  </g>
+
+  <!-- Row 2: Experts 8-15 -->
+  <g id="experts-row2">
+    <!-- Expert 8 — ACTIVE -->
+    <rect x="685" y="480" width="70" height="68" rx="6" fill="#2d1535" stroke="#f472b6" stroke-width="2" class="hl2"/>
+    <text x="720" y="498" text-anchor="middle" class="nlbl-sm" fill="#f472b6">E₈</text>
+    <text x="720" y="514" text-anchor="middle" class="dim" fill="#f9a8d4">fc1→GELU</text>
+    <text x="720" y="526" text-anchor="middle" class="dim" fill="#f9a8d4">→fc2</text>
+    <text x="720" y="540" text-anchor="middle" class="dim" fill="#f472b6">★ active</text>
+
+    <!-- Expert 9 -->
+    <rect x="763" y="480" width="70" height="68" rx="6" fill="#1a0f2e" stroke="#94a3b8" stroke-width="1" opacity=".5"/>
+    <text x="798" y="498" text-anchor="middle" class="nlbl-sm" fill="#94a3b8" opacity=".5">E₉</text>
+    <text x="798" y="514" text-anchor="middle" class="dim">fc1→GELU</text>
+    <text x="798" y="526" text-anchor="middle" class="dim">→fc2</text>
+    <text x="798" y="540" text-anchor="middle" class="dim" fill="#475569">inactive</text>
+
+    <!-- Expert 10 -->
+    <rect x="841" y="480" width="70" height="68" rx="6" fill="#1a0f2e" stroke="#94a3b8" stroke-width="1" opacity=".5"/>
+    <text x="876" y="498" text-anchor="middle" class="nlbl-sm" fill="#94a3b8" opacity=".5">E₁₀</text>
+    <text x="876" y="514" text-anchor="middle" class="dim">fc1→GELU</text>
+    <text x="876" y="526" text-anchor="middle" class="dim">→fc2</text>
+    <text x="876" y="540" text-anchor="middle" class="dim" fill="#475569">inactive</text>
+
+    <!-- Expert 11 — ACTIVE -->
+    <rect x="919" y="480" width="70" height="68" rx="6" fill="#2d1535" stroke="#f472b6" stroke-width="2" class="hl2"/>
+    <text x="954" y="498" text-anchor="middle" class="nlbl-sm" fill="#f472b6">E₁₁</text>
+    <text x="954" y="514" text-anchor="middle" class="dim" fill="#f9a8d4">fc1→GELU</text>
+    <text x="954" y="526" text-anchor="middle" class="dim" fill="#f9a8d4">→fc2</text>
+    <text x="954" y="540" text-anchor="middle" class="dim" fill="#f472b6">★ active</text>
+
+    <!-- Expert 12 — ACTIVE -->
+    <rect x="997" y="480" width="70" height="68" rx="6" fill="#2d1535" stroke="#f472b6" stroke-width="2" class="hl2"/>
+    <text x="1032" y="498" text-anchor="middle" class="nlbl-sm" fill="#f472b6">E₁₂</text>
+    <text x="1032" y="514" text-anchor="middle" class="dim" fill="#f9a8d4">fc1→GELU</text>
+    <text x="1032" y="526" text-anchor="middle" class="dim" fill="#f9a8d4">→fc2</text>
+    <text x="1032" y="540" text-anchor="middle" class="dim" fill="#f472b6">★ active</text>
+
+    <!-- Expert 13 -->
+    <rect x="1075" y="480" width="70" height="68" rx="6" fill="#1a0f2e" stroke="#94a3b8" stroke-width="1" opacity=".5"/>
+    <text x="1110" y="498" text-anchor="middle" class="nlbl-sm" fill="#94a3b8" opacity=".5">E₁₃</text>
+    <text x="1110" y="514" text-anchor="middle" class="dim">fc1→GELU</text>
+    <text x="1110" y="526" text-anchor="middle" class="dim">→fc2</text>
+    <text x="1110" y="540" text-anchor="middle" class="dim" fill="#475569">inactive</text>
+
+    <!-- Expert 14 -->
+    <rect x="1153" y="480" width="70" height="68" rx="6" fill="#1a0f2e" stroke="#94a3b8" stroke-width="1" opacity=".5"/>
+    <text x="1188" y="498" text-anchor="middle" class="nlbl-sm" fill="#94a3b8" opacity=".5">E₁₄</text>
+    <text x="1188" y="514" text-anchor="middle" class="dim">fc1→GELU</text>
+    <text x="1188" y="526" text-anchor="middle" class="dim">→fc2</text>
+    <text x="1188" y="540" text-anchor="middle" class="dim" fill="#475569">inactive</text>
+
+    <!-- Expert 15 — ACTIVE -->
+    <rect x="1231" y="480" width="70" height="68" rx="6" fill="#2d1535" stroke="#f472b6" stroke-width="2" class="hl2"/>
+    <text x="1266" y="498" text-anchor="middle" class="nlbl-sm" fill="#f472b6">E₁₅</text>
+    <text x="1266" y="514" text-anchor="middle" class="dim" fill="#f9a8d4">fc1→GELU</text>
+    <text x="1266" y="526" text-anchor="middle" class="dim" fill="#f9a8d4">→fc2</text>
+    <text x="1266" y="540" text-anchor="middle" class="dim" fill="#f472b6">★ active</text>
+  </g>
+
+  <!-- Dispatch code annotation -->
+  <rect x="685" y="562" width="310" height="60" rx="6" fill="#0f172a" stroke="#475569" stroke-width="1" opacity=".8"/>
+  <text x="695" y="578" text-anchor="start" class="code-sm" fill="#f472b6">for i in range(n_routed):</text>
+  <text x="705" y="592" text-anchor="start" class="code-sm">  mask = (topk_idx == i)</text>
+  <text x="705" y="606" text-anchor="start" class="code-sm">  exp_in = x_flat[row_idx]</text>
+
+  <!-- Gating annotation -->
+  <rect x="1010" y="562" width="310" height="60" rx="6" fill="#0f172a" stroke="#475569" stroke-width="1" opacity=".8"/>
+  <text x="1020" y="578" text-anchor="start" class="code-sm" fill="#22d3ee">out = self.routed[i](exp_in)</text>
+  <text x="1020" y="592" text-anchor="start" class="code-sm" fill="#fbbf24">w = gate[row_idx, which_k]</text>
+  <text x="1020" y="606" text-anchor="start" class="code-sm">routed_out += out * w</text>
+
+  <!-- Weighted sum circle -->
+  <circle cx="1000" cy="660" r="22" fill="#312e81" stroke="#c084fc" stroke-width="2" class="hl2"/>
+  <text x="1000" y="656" text-anchor="middle" class="nlbl" fill="#c084fc" font-size="11">Σ</text>
+  <text x="1000" y="672" text-anchor="middle" class="dim" fill="#c084fc">w·out</text>
+
+  <!-- arrows from code blocks to weighted sum -->
+  <line x1="840" y1="622" x2="985" y2="645" stroke="#f472b6" stroke-width="1.5" opacity=".5" class="flow" marker-end="url(#a-purple)"/>
+  <line x1="1100" y1="622" x2="1010" y2="645" stroke="#22d3ee" stroke-width="1.5" opacity=".5" class="flow" marker-end="url(#a-purple)"/>
+
+  <!-- routed_out label -->
+  <text x="1000" y="700" text-anchor="middle" class="code" fill="#c084fc">routed_out  [B, S, D]</text>
+
+  <!-- arrow down from routed sum -->
+  <line x1="1000" y1="682" x2="1000" y2="710" stroke="#c084fc" stroke-width="1.5" opacity=".5"/>
+  <line x1="1000" y1="710" x2="1000" y2="895" stroke="#c084fc" stroke-width="1.5" opacity=".4" class="flow"/>
+  <line x1="1000" y1="895" x2="770" y2="895" stroke="#c084fc" stroke-width="1.5" marker-end="url(#a-purple)" opacity=".6" class="flow"/>
+
+
+  <!-- ══════════════════════════════════ BIAS UPDATE PANEL ════════ -->
+  <rect x="80" y="500" width="400" height="200" rx="10" fill="url(#panel)" stroke="#fbbf24" stroke-width="1" opacity=".85"/>
+  <rect x="180" y="493" width="200" height="24" rx="6" fill="#422006" stroke="#fbbf24" stroke-width="1"/>
+  <text x="280" y="509" text-anchor="middle" class="ptitle" fill="#fbbf24">Bias Update (Online)</text>
+
+  <text x="100" y="535" text-anchor="start" class="code-sm" fill="#fbbf24">@torch.no_grad()</text>
+  <text x="100" y="550" text-anchor="start" class="code-sm" fill="#fbbf24">def update_bias(self, x):</text>
+  <text x="100" y="570" text-anchor="start" class="code-sm">  counts = bincount(topk_idx.flatten())</text>
+  <text x="100" y="585" text-anchor="start" class="code-sm">  avg = counts.sum() / n_routed</text>
+  <text x="100" y="605" text-anchor="start" class="code-sm" fill="#fb923c">  violation = (avg - counts) / (avg + ε)</text>
+  <text x="100" y="625" text-anchor="start" class="code-sm" fill="#f87171">  bias += lr · tanh(violation)</text>
+
+  <text x="280" y="655" text-anchor="middle" class="dim" fill="#fbbf24">Balances expert load — prevents expert collapse</text>
+  <text x="280" y="670" text-anchor="middle" class="dim" fill="#94a3b8">Over-loaded → decrease bias  |  Under-loaded → increase bias</text>
+  <text x="280" y="685" text-anchor="middle" class="dim" fill="#94a3b8">bias_lr = 0.01  (smooth, bounded by tanh)</text>
+
+  <!-- Arrow from bias panel to router -->
+  <path d="M 480 530 Q 560 530 600 305 Q 630 255 680 244" fill="none"
+      stroke="#fbbf24" stroke-width="1.5" opacity=".6" class="flow" marker-end="url(#a-amber)"/>
+  <text x="545" y="370" text-anchor="middle" class="dim" fill="#fbbf24" transform="rotate(-65,545,370)">updates router bias</text>
+
+
+  <!-- ══════════════════════════════════ RESIDUAL ADD ═════════════ -->
+  <!-- The big + node -->
+  <circle cx="700" cy="895" r="26" fill="url(#add-grad)" stroke="#fbbf24" stroke-width="2.5"/>
+  <text x="700" y="901" text-anchor="middle" class="nlbl" fill="#fbbf24" font-size="18">+</text>
+
+  <!-- labels around the add node -->
+  <text x="625" y="888" text-anchor="end" class="dim" fill="#34d399">shared_out →</text>
+  <text x="775" y="888" text-anchor="start" class="dim" fill="#c084fc">← routed_out</text>
+  <text x="700" y="870" text-anchor="middle" class="dim" fill="#60a5fa">↑ x (residual)</text>
+
+  <!-- formula -->
+  <text x="700" y="935" text-anchor="middle" class="nlbl" fill="#fbbf24" font-size="11">output = x + shared_out + routed_out</text>
+
+  <!-- ════════════════════════════════════ OUTPUT ═════════════════ -->
+  <line x1="700" y1="921" x2="700" y2="955" stroke="#a3e635" stroke-width="2" marker-end="url(#a-lime)"/>
+
+  <rect x="580" y="960" width="240" height="42" rx="8" fill="#14260e" stroke="#a3e635" stroke-width="2"/>
+  <text x="700" y="978" text-anchor="middle" class="nlbl" fill="#a3e635">Output</text>
+  <text x="700" y="994" text-anchor="middle" class="code-sm">[B, S, d_model]</text>
+
+
+  <!-- ═══════════════════════════════════════ LEGEND ══════════════ -->
+  <g transform="translate(30, 1025)">
+    <rect width="12" height="12" rx="2" fill="#1e3a5f" stroke="#60a5fa" stroke-width="1.5" y="-1"/>
+    <text x="17" y="9" class="label" fill="#60a5fa">Input / Residual</text>
+
+    <rect x="135" width="12" height="12" rx="2" fill="#0a1f0a" stroke="#22c55e" stroke-width="1.5" y="-1"/>
+    <text x="152" y="9" class="label" fill="#22c55e">Shared Expert</text>
+
+    <rect x="265" width="12" height="12" rx="2" fill="#312e81" stroke="#a78bfa" stroke-width="1.5" y="-1"/>
+    <text x="282" y="9" class="label" fill="#a78bfa">Router</text>
+
+    <rect x="350" width="12" height="12" rx="2" fill="#2d1535" stroke="#f472b6" stroke-width="1.5" y="-1"/>
+    <text x="367" y="9" class="label" fill="#f472b6">Active Expert</text>
+
+    <rect x="480" width="12" height="12" rx="2" fill="#1a0f2e" stroke="#94a3b8" stroke-width="1" y="-1" opacity=".5"/>
+    <text x="497" y="9" class="label" fill="#94a3b8">Inactive Expert</text>
+
+    <rect x="620" width="12" height="12" rx="2" fill="#422006" stroke="#fbbf24" stroke-width="1.5" y="-1"/>
+    <text x="637" y="9" class="label" fill="#fbbf24">Bias Update</text>
+
+    <rect x="745" width="12" height="12" rx="2" fill="#14260e" stroke="#a3e635" stroke-width="1.5" y="-1"/>
+    <text x="762" y="9" class="label" fill="#a3e635">Output</text>
+
+    <line x1="830" y1="5" x2="870" y2="5" stroke="#f472b6" stroke-width="2" stroke-dasharray="5 3"/>
+    <text x="877" y="9" class="label" fill="#f472b6">Token routing</text>
+
+    <text x="985" y="9" class="label" fill="#94a3b8">8 of 16 experts activated per token (sparse)</text>
+  </g>
+
+
+  <!-- ════════════════════════════════ ANIMATION PARTICLES ════════ -->
+  <!--
+    12s cycle, 3 phases:
+      Phase 1 (0-4s): Input → fork → Shared experts + Router
+      Phase 2 (4-8s): Router → Expert dispatch → weighted sum
+      Phase 3 (8-12s): shared_out + routed_out + x → Add → Output
+  -->
+
+  <!-- ── PHASE 1: Input splits ── -->
+
+  <!-- P1: Input → fork -->
+  <circle r="6" fill="#60a5fa" filter="url(#glow)" opacity="0">
+    <animateMotion dur="12s" repeatCount="indefinite"
+      keyPoints="0;0;1;1" keyTimes="0;0.001;0.04;1" calcMode="linear"
+      path="M 700 122 L 700 160"/>
+    <animate attributeName="opacity" dur="12s" repeatCount="indefinite"
+      values="0;1;1;0;0" keyTimes="0;0.001;0.04;0.06;1"/>
+  </circle>
+
+  <!-- P2: Fork → Shared experts -->
+  <circle r="5" fill="#34d399" filter="url(#glow)" opacity="0">
+    <animateMotion dur="12s" repeatCount="indefinite"
+      keyPoints="0;0;1;1" keyTimes="0;0.04;0.12;1" calcMode="linear"
+      path="M 694 160 L 280 160 L 280 250"/>
+    <animate attributeName="opacity" dur="12s" repeatCount="indefinite"
+      values="0;1;1;0;0" keyTimes="0;0.04;0.12;0.14;1"/>
+  </circle>
+
+  <!-- P3: Fork → Router -->
+  <circle r="5" fill="#c084fc" filter="url(#glow)" opacity="0">
+    <animateMotion dur="12s" repeatCount="indefinite"
+      keyPoints="0;0;1;1" keyTimes="0;0.04;0.12;1" calcMode="linear"
+      path="M 706 160 L 1100 160 L 1100 225"/>
+    <animate attributeName="opacity" dur="12s" repeatCount="indefinite"
+      values="0;1;1;0;0" keyTimes="0;0.04;0.12;0.14;1"/>
+  </circle>
+
+  <!-- P4: Through shared experts → sum -->
+  <circle r="5" fill="#22c55e" filter="url(#glow)" opacity="0">
+    <animateMotion dur="12s" repeatCount="indefinite"
+      keyPoints="0;0;1;1" keyTimes="0;0.12;0.22;1" calcMode="linear"
+      path="M 192 350 L 192 388 Q 192 400 262 400"/>
+    <animate attributeName="opacity" dur="12s" repeatCount="indefinite"
+      values="0;1;1;0;0" keyTimes="0;0.12;0.22;0.24;1"/>
+  </circle>
+
+  <circle r="5" fill="#22c55e" filter="url(#glow)" opacity="0">
+    <animateMotion dur="12s" repeatCount="indefinite"
+      keyPoints="0;0;1;1" keyTimes="0;0.12;0.22;1" calcMode="linear"
+      path="M 367 350 L 367 388 Q 367 400 298 400"/>
+    <animate attributeName="opacity" dur="12s" repeatCount="indefinite"
+      values="0;1;1;0;0" keyTimes="0;0.12;0.22;0.24;1"/>
+  </circle>
+
+  <!-- ── PHASE 2: Router → Expert dispatch → Weighted sum ── -->
+
+  <!-- P5: Router logits → topk -->
+  <circle r="4" fill="#818cf8" filter="url(#glow)" opacity="0">
+    <animateMotion dur="12s" repeatCount="indefinite"
+      keyPoints="0;0;1;1" keyTimes="0;0.14;0.20;1" calcMode="linear"
+      path="M 930 244 L 970 244"/>
+    <animate attributeName="opacity" dur="12s" repeatCount="indefinite"
+      values="0;1;1;0;0" keyTimes="0;0.14;0.20;0.22;1"/>
+  </circle>
+
+  <!-- P6: topk → softmax -->
+  <circle r="4" fill="#f472b6" filter="url(#glow)" opacity="0">
+    <animateMotion dur="12s" repeatCount="indefinite"
+      keyPoints="0;0;1;1" keyTimes="0;0.20;0.26;1" calcMode="linear"
+      path="M 1170 244 L 1190 244"/>
+    <animate attributeName="opacity" dur="12s" repeatCount="indefinite"
+      values="0;1;1;0;0" keyTimes="0;0.20;0.26;0.28;1"/>
+  </circle>
+
+  <!-- P7: tokens dispatched to active experts (fan-out particles) -->
+  <!-- To Expert 1 -->
+  <circle r="4" fill="#f472b6" filter="url(#glow)" opacity="0">
+    <animateMotion dur="12s" repeatCount="indefinite"
+      keyPoints="0;0;1;1" keyTimes="0;0.28;0.36;1" calcMode="linear"
+      path="M 1000 330 L 798 400"/>
+    <animate attributeName="opacity" dur="12s" repeatCount="indefinite"
+      values="0;1;1;0;0" keyTimes="0;0.28;0.36;0.38;1"/>
+  </circle>
+  <!-- To Expert 3 -->
+  <circle r="4" fill="#f472b6" filter="url(#glow)" opacity="0">
+    <animateMotion dur="12s" repeatCount="indefinite"
+      keyPoints="0;0;1;1" keyTimes="0;0.29;0.37;1" calcMode="linear"
+      path="M 1000 330 L 954 400"/>
+    <animate attributeName="opacity" dur="12s" repeatCount="indefinite"
+      values="0;1;1;0;0" keyTimes="0;0.29;0.37;0.39;1"/>
+  </circle>
+  <!-- To Expert 4 -->
+  <circle r="4" fill="#f472b6" filter="url(#glow)" opacity="0">
+    <animateMotion dur="12s" repeatCount="indefinite"
+      keyPoints="0;0;1;1" keyTimes="0;0.30;0.38;1" calcMode="linear"
+      path="M 1000 330 L 1032 400"/>
+    <animate attributeName="opacity" dur="12s" repeatCount="indefinite"
+      values="0;1;1;0;0" keyTimes="0;0.30;0.38;0.40;1"/>
+  </circle>
+  <!-- To Expert 6 -->
+  <circle r="4" fill="#f472b6" filter="url(#glow)" opacity="0">
+    <animateMotion dur="12s" repeatCount="indefinite"
+      keyPoints="0;0;1;1" keyTimes="0;0.31;0.39;1" calcMode="linear"
+      path="M 1000 330 L 1188 400"/>
+    <animate attributeName="opacity" dur="12s" repeatCount="indefinite"
+      values="0;1;1;0;0" keyTimes="0;0.31;0.39;0.41;1"/>
+  </circle>
+  <!-- To Expert 8 -->
+  <circle r="4" fill="#f472b6" filter="url(#glow)" opacity="0">
+    <animateMotion dur="12s" repeatCount="indefinite"
+      keyPoints="0;0;1;1" keyTimes="0;0.32;0.40;1" calcMode="linear"
+      path="M 1000 330 L 720 480"/>
+    <animate attributeName="opacity" dur="12s" repeatCount="indefinite"
+      values="0;1;1;0;0" keyTimes="0;0.32;0.40;0.42;1"/>
+  </circle>
+  <!-- To Expert 11 -->
+  <circle r="4" fill="#f472b6" filter="url(#glow)" opacity="0">
+    <animateMotion dur="12s" repeatCount="indefinite"
+      keyPoints="0;0;1;1" keyTimes="0;0.33;0.41;1" calcMode="linear"
+      path="M 1000 330 L 954 480"/>
+    <animate attributeName="opacity" dur="12s" repeatCount="indefinite"
+      values="0;1;1;0;0" keyTimes="0;0.33;0.41;0.43;1"/>
+  </circle>
+  <!-- To Expert 12 -->
+  <circle r="4" fill="#f472b6" filter="url(#glow)" opacity="0">
+    <animateMotion dur="12s" repeatCount="indefinite"
+      keyPoints="0;0;1;1" keyTimes="0;0.34;0.42;1" calcMode="linear"
+      path="M 1000 330 L 1032 480"/>
+    <animate attributeName="opacity" dur="12s" repeatCount="indefinite"
+      values="0;1;1;0;0" keyTimes="0;0.34;0.42;0.44;1"/>
+  </circle>
+  <!-- To Expert 15 -->
+  <circle r="4" fill="#f472b6" filter="url(#glow)" opacity="0">
+    <animateMotion dur="12s" repeatCount="indefinite"
+      keyPoints="0;0;1;1" keyTimes="0;0.35;0.43;1" calcMode="linear"
+      path="M 1000 330 L 1266 480"/>
+    <animate attributeName="opacity" dur="12s" repeatCount="indefinite"
+      values="0;1;1;0;0" keyTimes="0;0.35;0.43;0.45;1"/>
+  </circle>
+
+  <!-- P8: Expert outputs → weighted sum -->
+  <circle r="5" fill="#c084fc" filter="url(#glow-strong)" opacity="0">
+    <animateMotion dur="12s" repeatCount="indefinite"
+      keyPoints="0;0;1;1" keyTimes="0;0.45;0.55;1" calcMode="linear"
+      path="M 1000 560 L 1000 645"/>
+    <animate attributeName="opacity" dur="12s" repeatCount="indefinite"
+      values="0;1;1;0;0" keyTimes="0;0.45;0.55;0.57;1"/>
+  </circle>
+
+  <!-- ── PHASE 3: Everything → Add → Output ── -->
+
+  <!-- P9: shared_out → add -->
+  <circle r="6" fill="#34d399" filter="url(#glow-strong)" opacity="0">
+    <animateMotion dur="12s" repeatCount="indefinite"
+      keyPoints="0;0;1;1" keyTimes="0;0.60;0.72;1" calcMode="linear"
+      path="M 280 445 L 280 895 L 630 895"/>
+    <animate attributeName="opacity" dur="12s" repeatCount="indefinite"
+      values="0;1;1;0;0" keyTimes="0;0.60;0.72;0.74;1"/>
+  </circle>
+
+  <!-- P10: routed_out → add -->
+  <circle r="6" fill="#c084fc" filter="url(#glow-strong)" opacity="0">
+    <animateMotion dur="12s" repeatCount="indefinite"
+      keyPoints="0;0;1;1" keyTimes="0;0.60;0.72;1" calcMode="linear"
+      path="M 1000 710 L 1000 895 L 770 895"/>
+    <animate attributeName="opacity" dur="12s" repeatCount="indefinite"
+      values="0;1;1;0;0" keyTimes="0;0.60;0.72;0.74;1"/>
+  </circle>
+
+  <!-- P11: residual x → add -->
+  <circle r="5" fill="#60a5fa" filter="url(#glow)" opacity="0">
+    <animateMotion dur="12s" repeatCount="indefinite"
+      keyPoints="0;0;1;1" keyTimes="0;0.62;0.70;1" calcMode="linear"
+      path="M 700 166 L 700 870"/>
+    <animate attributeName="opacity" dur="12s" repeatCount="indefinite"
+      values="0;0.7;0.7;0;0" keyTimes="0;0.62;0.70;0.72;1"/>
+  </circle>
+
+  <!-- P12: Add → output -->
+  <circle r="7" fill="#a3e635" filter="url(#glow-strong)" opacity="0">
+    <animateMotion dur="12s" repeatCount="indefinite"
+      keyPoints="0;0;1;1" keyTimes="0;0.78;0.85;1" calcMode="linear"
+      path="M 700 921 L 700 960"/>
+    <animate attributeName="opacity" dur="12s" repeatCount="indefinite"
+      values="0;1;1;0;0" keyTimes="0;0.78;0.85;0.88;1"/>
+  </circle>
+
+  <!-- Output flash ring -->
+  <circle cx="700" cy="980" r="30" fill="none" stroke="#a3e635" stroke-width="2" opacity="0">
+    <animate attributeName="opacity" dur="12s" repeatCount="indefinite"
+      values="0;0;0.6;0;0" keyTimes="0;0.85;0.90;0.95;1"/>
+    <animate attributeName="r" dur="12s" repeatCount="indefinite"
+      values="30;30;50;50;30" keyTimes="0;0.85;0.90;0.95;1"/>
+  </circle>
+
+  <!-- Credit -->
+  <text x="1380" y="20" text-anchor="end" font-family="'SF Mono','Fira Code','Consolas',monospace"
+        font-size="11" font-weight="700" fill="#64748b">Illustrated By Chandan11248</text>
+
+</svg>
+
