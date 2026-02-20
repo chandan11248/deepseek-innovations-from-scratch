@@ -197,6 +197,33 @@ Distinguishes between offline (calibration-based, fixed scale) and online (per-b
 
 ---
 
+## Mathematical Intuition Notes
+
+Before any code was written, each concept in this repository was first worked through by hand — deriving the mathematics from first principles, tracing through dimensions, and building intuition for why each design decision is necessary.
+
+The full collection of handwritten derivations is compiled in:
+
+**[`assets/mathematical_intution_notes/deepseek from scratch.pdf`](assets/mathematical_intution_notes/deepseek%20from%20scratch.pdf)**
+
+The notes cover the following topics, in study order:
+
+| Topic | Key Questions Addressed |
+|---|---|
+| Attention mechanism (scaled dot-product) | Why divide by sqrt(d_k)? What does the softmax actually compress? |
+| Multi-Head Attention | Why multiple heads? What does each head specialize in? |
+| Multi-Head Latent Attention (MLA) | How does low-rank KV projection preserve attention quality? What is the rank-precision tradeoff? |
+| KV cache and memory bottleneck | Where does KV cache memory go during inference? How does MLA change the equation? |
+| Rotary Positional Encodings (RoPE) | Why does rotating Q and K in frequency space encode relative position? Derivation from scratch. |
+| Mixture of Experts routing | What does the router learn? Why does load balancing prevent collapse? |
+| Floating point representation | IEEE-754 derivation, why mantissa determines precision, why exponent determines range |
+| FP8 quantization errors | How do rounding errors accumulate in dot products? What is catastrophic cancellation? |
+| Group scaling mathematics | Why does per-group scaling bound the precision loss from outliers? |
+| Gradient flow in mixed precision | Why do small gradient updates vanish in BF16/FP8? How does FP32 master weight storage fix this? |
+
+These notes serve as the conceptual foundation for every implementation in the repository. Reading them alongside the code is the intended approach — the diagrams in `deepseek Quantization technique/` are the visual extension of the same derivations.
+
+---
+
 ## Why These Innovations Compound
 
 Each technique in Phase 1 is independent but mutually reinforcing:
