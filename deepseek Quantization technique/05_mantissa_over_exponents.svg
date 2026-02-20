@@ -1,0 +1,304 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 2200" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a0a1a"/><stop offset="100%" style="stop-color:#0d1117"/>
+    </linearGradient>
+    <linearGradient id="headerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f0c29"/><stop offset="50%" style="stop-color:#302b63"/><stop offset="100%" style="stop-color:#24243e"/>
+    </linearGradient>
+    <linearGradient id="accent1" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#fa709a"/><stop offset="100%" style="stop-color:#fee140"/>
+    </linearGradient>
+    <linearGradient id="e4m3Grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ff6b6b"/><stop offset="100%" style="stop-color:#ffa502"/>
+    </linearGradient>
+    <linearGradient id="m3Highlight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#43e97b"/><stop offset="100%" style="stop-color:#38f9d7"/>
+    </linearGradient>
+    <filter id="shadow" x="-4%" y="-4%" width="108%" height="108%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+    <marker id="arrowGreen" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#43e97b">
+      <polygon points="0 0, 10 3.5, 0 7"/>
+    </marker>
+    <pattern id="dots" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+      <circle cx="20" cy="20" r="0.8" fill="#ffffff" opacity="0.04"/>
+    </pattern>
+  </defs>
+
+  <rect width="1400" height="2200" fill="url(#bgGrad)"/>
+  <rect width="1400" height="2200" fill="url(#dots)"/>
+
+  <!-- HEADER -->
+  <rect x="40" y="30" width="1320" height="130" rx="18" fill="url(#headerGrad)" filter="url(#shadow)"/>
+  <rect x="40" y="30" width="1320" height="130" rx="18" fill="none" stroke="url(#accent1)" stroke-width="1.5" opacity="0.5"/>
+  <rect x="70" y="55" width="6" height="80" rx="3" fill="url(#accent1)"/>
+  <text x="95" y="90" fill="#ffffff" font-size="30" font-weight="bold">Mantissa over Exponents — Why E4M3?</text>
+  <text x="95" y="118" fill="#8b8baa" font-size="15" letter-spacing="1.5">FORMAT SELECTION • PRECISION vs RANGE • DESIGN RATIONALE</text>
+  <text x="95" y="142" fill="#fa709a" font-size="12">DeepSeek Quantization Technique — Part 5 of 6</text>
+  <rect x="1100" y="60" width="230" height="40" rx="8" fill="#fa709a" opacity="0.15" stroke="#fa709a" stroke-width="1"/>
+  <text x="1215" y="85" text-anchor="middle" fill="#fa709a" font-size="13" font-weight="bold">FORMAT CHOICE</text>
+
+  <!-- OVERVIEW -->
+  <rect x="40" y="190" width="1320" height="130" rx="14" fill="#111128" filter="url(#shadow)"/>
+  <rect x="40" y="190" width="1320" height="130" rx="14" fill="none" stroke="#667eea" stroke-width="1" opacity="0.3"/>
+  <text x="80" y="228" fill="#c8c8e8" font-size="16" font-weight="bold">The Core Design Choice in DeepSeek's FP8 Strategy</text>
+  <text x="80" y="258" fill="#ddd" font-size="13">When designing FP8 training, DeepSeek had to choose between two competing FP8 formats: <tspan fill="#ff6b6b" font-weight="bold">E4M3</tspan> and <tspan fill="#999">E5M2</tspan>.</text>
+  <text x="80" y="284" fill="#ddd" font-size="13">Both use 8 bits total, but they allocate bits differently between exponent and mantissa, creating a fundamental tradeoff.</text>
+  <text x="80" y="308" fill="#43e97b" font-size="13" font-weight="bold">DeepSeek chose E4M3. Here is exactly why.</text>
+
+  <!-- SIDE BY SIDE COMPARISON -->
+  <!-- E4M3 Column -->
+  <rect x="40" y="350" width="650" height="680" rx="14" fill="#111128" filter="url(#shadow)"/>
+  <rect x="40" y="350" width="650" height="680" rx="14" fill="none" stroke="#ff6b6b" stroke-width="2.5" opacity="0.7"/>
+  <rect x="40" y="350" width="650" height="55" rx="14" fill="#ff6b6b" opacity="0.1"/>
+  <rect x="40" y="393" width="650" height="12" fill="#111128"/>
+  
+  <text x="365" y="384" text-anchor="middle" fill="#ff6b6b" font-size="22" font-weight="bold">★ E4M3 — DeepSeek's Choice</text>
+  <rect x="230" y="355" width="80" height="28" rx="6" fill="#ff6b6b" opacity="0.25" stroke="#ff6b6b" stroke-width="1"/>
+  <text x="270" y="374" text-anchor="middle" fill="#ff6b6b" font-size="11" font-weight="bold">CHOSEN</text>
+
+  <!-- Bit layout E4M3 -->
+  <text x="70" y="435" fill="#8b8baa" font-size="12" font-weight="bold">BIT LAYOUT (8 total):</text>
+  <g transform="translate(70, 448)">
+    <!-- Sign -->
+    <rect x="0" y="0" width="55" height="55" rx="6" fill="#e74c3c" opacity="0.3" stroke="#e74c3c" stroke-width="2"/>
+    <text x="27" y="25" text-anchor="middle" fill="#e74c3c" font-size="15" font-weight="bold">S</text>
+    <text x="27" y="45" text-anchor="middle" fill="#e74c3c" font-size="10">1 bit</text>
+
+    <!-- Exponent 4 bits -->
+    <rect x="62" y="0" width="215" height="55" rx="6" fill="#3498db" opacity="0.2" stroke="#3498db" stroke-width="2"/>
+    <text x="169" y="22" text-anchor="middle" fill="#3498db" font-size="13" font-weight="bold">Exponent</text>
+    <text x="169" y="40" text-anchor="middle" fill="#3498db" font-size="11">4 bits</text>
+    <!-- individual cells -->
+    <rect x="70" y="6" width="44" height="20" rx="3" fill="#3498db" opacity="0.2" stroke="#3498db" stroke-width="0.5"/>
+    <rect x="118" y="6" width="44" height="20" rx="3" fill="#3498db" opacity="0.2" stroke="#3498db" stroke-width="0.5"/>
+    <rect x="166" y="6" width="44" height="20" rx="3" fill="#3498db" opacity="0.2" stroke="#3498db" stroke-width="0.5"/>
+    <rect x="214" y="6" width="45" height="20" rx="3" fill="#3498db" opacity="0.2" stroke="#3498db" stroke-width="0.5"/>
+
+    <!-- Mantissa 3 bits — highlighted -->
+    <rect x="284" y="-4" width="225" height="65" rx="6" fill="#43e97b" opacity="0.2" stroke="#43e97b" stroke-width="3"/>
+    <text x="396" y="22" text-anchor="middle" fill="#43e97b" font-size="13" font-weight="bold">Mantissa</text>
+    <text x="396" y="40" text-anchor="middle" fill="#43e97b" font-size="11">3 bits ← KEY!</text>
+    <!-- individual cells -->
+    <rect x="292" y="4" width="60" height="22" rx="3" fill="#43e97b" opacity="0.3" stroke="#43e97b" stroke-width="1"/>
+    <rect x="356" y="4" width="60" height="22" rx="3" fill="#43e97b" opacity="0.3" stroke="#43e97b" stroke-width="1"/>
+    <rect x="420" y="4" width="60" height="22" rx="3" fill="#43e97b" opacity="0.3" stroke="#43e97b" stroke-width="1"/>
+    <text x="322" y="20" text-anchor="middle" fill="#43e97b" font-size="10">m₁</text>
+    <text x="386" y="20" text-anchor="middle" fill="#43e97b" font-size="10">m₂</text>
+    <text x="450" y="20" text-anchor="middle" fill="#43e97b" font-size="10">m₃</text>
+  </g>
+
+  <!-- E4M3 Specifications -->
+  <g transform="translate(70, 530)">
+    <rect x="0" y="0" width="570" height="45" rx="8" fill="#0a0a20" stroke="#ff6b6b" stroke-width="1"/>
+    <text x="20" y="18" fill="#ff6b6b" font-size="12" font-weight="bold">Max Representable Value</text>
+    <text x="20" y="37" fill="#ffa502" font-size="18" font-weight="bold">448</text>
+    <text x="100" y="37" fill="#8b8baa" font-size="11">(limited range — handled by group scaling)</text>
+
+    <rect x="0" y="55" width="570" height="45" rx="8" fill="#0a0a20" stroke="#43e97b" stroke-width="1.5"/>
+    <text x="20" y="73" fill="#43e97b" font-size="12" font-weight="bold">Mantissa Precision Levels</text>
+    <text x="20" y="92" fill="#fff" font-size="16" font-weight="bold">2³ = 8 levels</text>
+    <text x="105" y="92" fill="#8b8baa" font-size="11">per exponent step → finer value distinction</text>
+
+    <rect x="0" y="110" width="570" height="55" rx="8" fill="#0a0a20" stroke="#667eea" stroke-width="1"/>
+    <text x="20" y="130" fill="#667eea" font-size="12" font-weight="bold">Formula</text>
+    <text x="20" y="150" fill="#ddd" font-size="12">(-1)^S × 2^(E-7) × (1 + m₁/2 + m₂/4 + m₃/8)</text>
+
+    <rect x="0" y="175" width="570" height="45" rx="8" fill="#0a0a20" stroke="#555" stroke-width="1"/>
+    <text x="20" y="193" fill="#8b8baa" font-size="12" font-weight="bold">Memory</text>
+    <text x="20" y="212" fill="#ddd" font-size="12">1 byte per value — 4× smaller than FP32</text>
+  </g>
+
+  <!-- Why it's good for training -->
+  <rect x="70" y="880" width="574" height="115" rx="10" fill="#0a2a1a" stroke="#43e97b" stroke-width="2"/>
+  <text x="90" y="908" fill="#43e97b" font-size="14" font-weight="bold">✓ Why This Is Better For Training</text>
+  <text x="90" y="934" fill="#ddd" font-size="12">Model weights and activations typically cluster in a</text>
+  <text x="90" y="954" fill="#ddd" font-size="12">narrow range. Higher precision within that range</text>
+  <text x="90" y="974" fill="#ddd" font-size="12">(more mantissa bits) = better gradient signals = better model.</text>
+
+  <!-- E5M2 Column -->
+  <rect x="720" y="350" width="640" height="680" rx="14" fill="#111128" filter="url(#shadow)"/>
+  <rect x="720" y="350" width="640" height="680" rx="14" fill="none" stroke="#555" stroke-width="1.5" opacity="0.6"/>
+  <rect x="720" y="350" width="640" height="55" rx="14" fill="#555" opacity="0.06"/>
+  <rect x="720" y="393" width="640" height="12" fill="#111128"/>
+  <text x="1040" y="384" text-anchor="middle" fill="#999" font-size="22" font-weight="bold">E5M2 — Not Chosen</text>
+
+  <!-- Bit layout E5M2 -->
+  <text x="750" y="435" fill="#555" font-size="12" font-weight="bold">BIT LAYOUT (8 total):</text>
+  <g transform="translate(750, 448)">
+    <!-- Sign -->
+    <rect x="0" y="0" width="55" height="55" rx="6" fill="#e74c3c" opacity="0.15" stroke="#e74c3c" stroke-width="1"/>
+    <text x="27" y="25" text-anchor="middle" fill="#e74c3c" font-size="15" opacity="0.5">S</text>
+    <text x="27" y="45" text-anchor="middle" fill="#888" font-size="10">1 bit</text>
+
+    <!-- Exponent 5 bits — highlighted (bigger) -->
+    <rect x="62" y="-4" width="280" height="65" rx="6" fill="#3498db" opacity="0.15" stroke="#3498db" stroke-width="2"/>
+    <text x="202" y="22" text-anchor="middle" fill="#3498db" font-size="13" opacity="0.6">Exponent</text>
+    <text x="202" y="40" text-anchor="middle" fill="#3498db" font-size="11" opacity="0.6">5 bits (wider range)</text>
+
+    <!-- Mantissa 2 bits — dimmed -->
+    <rect x="349" y="0" width="140" height="55" rx="6" fill="#2ecc71" opacity="0.1" stroke="#2ecc71" stroke-width="1"/>
+    <text x="419" y="25" text-anchor="middle" fill="#555" font-size="13">Mantissa</text>
+    <text x="419" y="43" text-anchor="middle" fill="#555" font-size="11">2 bits only</text>
+  </g>
+
+  <!-- E5M2 Specifications -->
+  <g transform="translate(750, 530)">
+    <rect x="0" y="0" width="570" height="45" rx="8" fill="#0a0a20" stroke="#555" stroke-width="1"/>
+    <text x="20" y="18" fill="#888" font-size="12" font-weight="bold">Max Representable Value</text>
+    <text x="20" y="37" fill="#888" font-size="18" font-weight="bold">57,344</text>
+    <text x="150" y="37" fill="#555" font-size="11">(large range — mostly wasted)</text>
+
+    <rect x="0" y="55" width="570" height="45" rx="8" fill="#0a0a20" stroke="#555" stroke-width="1"/>
+    <text x="20" y="73" fill="#888" font-size="12" font-weight="bold">Mantissa Precision Levels</text>
+    <text x="20" y="92" fill="#888" font-size="16" font-weight="bold">2² = 4 levels</text>
+    <text x="100" y="92" fill="#555" font-size="11">per exponent step → coarser distinction</text>
+
+    <rect x="0" y="110" width="570" height="55" rx="8" fill="#0a0a20" stroke="#555" stroke-width="1"/>
+    <text x="20" y="130" fill="#555" font-size="12" font-weight="bold">Formula</text>
+    <text x="20" y="150" fill="#666" font-size="12">(-1)^S × 2^(E-15) × (1 + m₁/2 + m₂/4)</text>
+
+    <rect x="0" y="175" width="570" height="45" rx="8" fill="#0a0a20" stroke="#555" stroke-width="1"/>
+    <text x="20" y="193" fill="#666" font-size="12" font-weight="bold">Memory</text>
+    <text x="20" y="212" fill="#666" font-size="12">1 byte per value — same as E4M3</text>
+  </g>
+
+  <!-- Why it's worse for training -->
+  <rect x="750" y="880" width="574" height="115" rx="10" fill="#1a0a0a" stroke="#555" stroke-width="1.5"/>
+  <text x="770" y="908" fill="#888" font-size="14" font-weight="bold">✗ Why This Is Worse For Training</text>
+  <text x="770" y="934" fill="#666" font-size="12">Large range (up to 57,344) is mostly wasted — actual</text>
+  <text x="770" y="954" fill="#666" font-size="12">weight/activation values cluster in a much smaller range.</text>
+  <text x="770" y="974" fill="#555" font-size="12">Extra exponent bits provide no benefit with group scaling.</text>
+
+  <!-- THE REASONING SECTION -->
+  <rect x="40" y="1060" width="1320" height="400" rx="14" fill="#111128" filter="url(#shadow)"/>
+  <rect x="40" y="1060" width="1320" height="400" rx="14" fill="none" stroke="#fa709a" stroke-width="1.5" opacity="0.4"/>
+  <text x="80" y="1100" fill="#c8c8e8" font-size="18" font-weight="bold">The Key Reasoning: Why Range Matters Less Than Precision</text>
+  <line x1="80" y1="1112" x2="620" y2="1112" stroke="url(#accent1)" stroke-width="2" opacity="0.5"/>
+
+  <!-- Reasoning flow -->
+  <g transform="translate(80, 1130)">
+    <!-- Argument 1 -->
+    <rect x="0" y="0" width="1240" height="68" rx="8" fill="#0a0a20" stroke="#ffa502" stroke-width="1.5"/>
+    <circle cx="30" cy="34" r="18" fill="#ffa502" opacity="0.2" stroke="#ffa502" stroke-width="1.5"/>
+    <text x="30" y="40" text-anchor="middle" fill="#ffa502" font-size="14" font-weight="bold">1</text>
+    <text x="65" y="20" fill="#ffa502" font-size="13" font-weight="bold">Fine-grained scaling already handles the range problem</text>
+    <text x="65" y="40" fill="#ddd" font-size="12">Group scaling (Section 3) provides each tile its own scale factor, adapting to any range of values.</text>
+    <text x="65" y="58" fill="#43e97b" font-size="11">→ E4M3's limited max value (448) is perfectly fine — scales bring any value into range.</text>
+
+    <!-- Argument 2 -->
+    <rect x="0" y="80" width="1240" height="68" rx="8" fill="#0a0a20" stroke="#43e97b" stroke-width="1.5"/>
+    <circle cx="30" cy="114" r="18" fill="#43e97b" opacity="0.2" stroke="#43e97b" stroke-width="1.5"/>
+    <text x="30" y="120" text-anchor="middle" fill="#43e97b" font-size="14" font-weight="bold">2</text>
+    <text x="65" y="100" fill="#43e97b" font-size="13" font-weight="bold">Precision within range is what determines model quality</text>
+    <text x="65" y="120" fill="#ddd" font-size="12">Can the model distinguish between 0.1 and 0.2? More mantissa bits = yes. Fewer = they round to the same value.</text>
+    <text x="65" y="138" fill="#43e97b" font-size="11">→ E4M3's 3-bit mantissa = 8 levels/step vs E5M2's 4 levels/step = 2× finer precision.</text>
+
+    <!-- Argument 3 -->
+    <rect x="0" y="160" width="1240" height="68" rx="8" fill="#0a0a20" stroke="#667eea" stroke-width="1.5"/>
+    <circle cx="30" cy="194" r="18" fill="#667eea" opacity="0.2" stroke="#667eea" stroke-width="1.5"/>
+    <text x="30" y="200" text-anchor="middle" fill="#667eea" font-size="14" font-weight="bold">3</text>
+    <text x="65" y="180" fill="#667eea" font-size="13" font-weight="bold">Weight and activation distributions are naturally narrow</text>
+    <text x="65" y="200" fill="#ddd" font-size="12">Trained neural network weights typically follow ~N(0, σ) with σ ≈ 0.01–0.1 for most layers.</text>
+    <text x="65" y="218" fill="#43e97b" font-size="11">→ 99%+ of values are well within E4M3's range even without group scaling.</text>
+
+    <!-- Conclusion -->
+    <rect x="0" y="250" width="1240" height="65" rx="8" fill="#1a0a2a" stroke="#fa709a" stroke-width="2"/>
+    <text x="35" y="275" fill="#fa709a" font-size="14" font-weight="bold">Conclusion:</text>
+    <text x="155" y="275" fill="#ddd" font-size="13">Choose E4M3 to maximize precision (more mantissa bits).</text>
+    <text x="35" y="300" fill="#43e97b" font-size="12">Group scaling compensates for E4M3's smaller range → getting the best of both: precision AND effective range coverage.</text>
+  </g>
+
+  <!-- NUMERICAL COMPARISON TABLE -->
+  <rect x="40" y="1490" width="1320" height="380" rx="14" fill="#111128" filter="url(#shadow)"/>
+  <rect x="40" y="1490" width="1320" height="380" rx="14" fill="none" stroke="#667eea" stroke-width="1" opacity="0.3"/>
+  <text x="80" y="1530" fill="#c8c8e8" font-size="18" font-weight="bold">Head-to-Head Numerical Comparison</text>
+  <line x1="80" y1="1542" x2="430" y2="1542" stroke="url(#accent1)" stroke-width="2" opacity="0.5"/>
+
+  <!-- Table -->
+  <g transform="translate(70, 1560)">
+    <!-- Header -->
+    <rect x="0" y="0" width="300" height="38" rx="4" fill="#1a1a30" stroke="#667eea" stroke-width="1"/>
+    <text x="150" y="24" text-anchor="middle" fill="#667eea" font-size="12" font-weight="bold">Property</text>
+    <rect x="305" y="0" width="395" height="38" rx="4" fill="#2a0a0a" stroke="#ff6b6b" stroke-width="1.5"/>
+    <text x="502" y="24" text-anchor="middle" fill="#ff6b6b" font-size="12" font-weight="bold">★ E4M3 (Chosen)</text>
+    <rect x="705" y="0" width="550" height="38" rx="4" fill="#1a1a1a" stroke="#555" stroke-width="1"/>
+    <text x="980" y="24" text-anchor="middle" fill="#888" font-size="12" font-weight="bold">E5M2 (Not Chosen)</text>
+
+    <!-- Row 1 -->
+    <rect x="0" y="43" width="300" height="38" fill="#0a0a20" stroke="#222" stroke-width="0.5"/>
+    <text x="15" y="67" fill="#8b8baa" font-size="12">Exponent Bits</text>
+    <rect x="305" y="43" width="395" height="38" fill="#0a1a10" stroke="#222" stroke-width="0.5"/>
+    <text x="502" y="67" text-anchor="middle" fill="#ddd" font-size="12">4 bits</text>
+    <rect x="705" y="43" width="550" height="38" fill="#0a0a0a" stroke="#222" stroke-width="0.5"/>
+    <text x="980" y="67" text-anchor="middle" fill="#666" font-size="12">5 bits</text>
+
+    <!-- Row 2 -->
+    <rect x="0" y="86" width="300" height="38" fill="#0d0d20" stroke="#222" stroke-width="0.5"/>
+    <text x="15" y="110" fill="#8b8baa" font-size="12">Mantissa Bits</text>
+    <rect x="305" y="86" width="395" height="38" fill="#0a1a10" stroke="#43e97b" stroke-width="1.5"/>
+    <text x="502" y="110" text-anchor="middle" fill="#43e97b" font-size="18" font-weight="bold">3 bits ✓</text>
+    <rect x="705" y="86" width="550" height="38" fill="#0a0a0a" stroke="#222" stroke-width="0.5"/>
+    <text x="980" y="110" text-anchor="middle" fill="#666" font-size="18">2 bits</text>
+
+    <!-- Row 3 -->
+    <rect x="0" y="129" width="300" height="38" fill="#0a0a20" stroke="#222" stroke-width="0.5"/>
+    <text x="15" y="153" fill="#8b8baa" font-size="12">Max Value</text>
+    <rect x="305" y="129" width="395" height="38" fill="#0a1a10" stroke="#222" stroke-width="0.5"/>
+    <text x="502" y="153" text-anchor="middle" fill="#ddd" font-size="12">448 (managed by group scaling)</text>
+    <rect x="705" y="129" width="550" height="38" fill="#0a0a0a" stroke="#222" stroke-width="0.5"/>
+    <text x="980" y="153" text-anchor="middle" fill="#666" font-size="12">57,344 (unused with groups)</text>
+
+    <!-- Row 4 -->
+    <rect x="0" y="172" width="300" height="38" fill="#0d0d20" stroke="#222" stroke-width="0.5"/>
+    <text x="15" y="196" fill="#8b8baa" font-size="12">Precision Levels/Step</text>
+    <rect x="305" y="172" width="395" height="38" fill="#0a1a10" stroke="#43e97b" stroke-width="1.5"/>
+    <text x="502" y="196" text-anchor="middle" fill="#43e97b" font-size="18" font-weight="bold">8 ✓</text>
+    <rect x="705" y="172" width="550" height="38" fill="#0a0a0a" stroke="#222" stroke-width="0.5"/>
+    <text x="980" y="196" text-anchor="middle" fill="#666" font-size="18">4</text>
+
+    <!-- Row 5 -->
+    <rect x="0" y="215" width="300" height="38" fill="#0a0a20" stroke="#222" stroke-width="0.5"/>
+    <text x="15" y="239" fill="#8b8baa" font-size="12">Training Quality</text>
+    <rect x="305" y="215" width="395" height="38" fill="#0a1a10" stroke="#43e97b" stroke-width="1.5"/>
+    <text x="502" y="239" text-anchor="middle" fill="#43e97b" font-size="12" font-weight="bold">Matches BF16 baseline ✓</text>
+    <rect x="705" y="215" width="550" height="38" fill="#0a0a0a" stroke="#222" stroke-width="0.5"/>
+    <text x="980" y="239" text-anchor="middle" fill="#666" font-size="12">Noticeable quality degradation</text>
+
+    <!-- Row 6 -->
+    <rect x="0" y="258" width="300" height="38" fill="#0d0d20" stroke="#222" stroke-width="0.5"/>
+    <text x="15" y="282" fill="#8b8baa" font-size="12">Used for</text>
+    <rect x="305" y="258" width="395" height="38" fill="#0a1a10" stroke="#222" stroke-width="0.5"/>
+    <text x="502" y="282" text-anchor="middle" fill="#ff6b6b" font-size="12" font-weight="bold">Weights AND Activations</text>
+    <rect x="705" y="258" width="550" height="38" fill="#0a0a0a" stroke="#222" stroke-width="0.5"/>
+    <text x="980" y="282" text-anchor="middle" fill="#666" font-size="12">Historically used for gradient tensors</text>
+  </g>
+
+  <!-- KEY TAKEAWAYS -->
+  <rect x="40" y="1900" width="1320" height="270" rx="14" fill="url(#headerGrad)" filter="url(#shadow)"/>
+  <rect x="40" y="1900" width="1320" height="270" rx="14" fill="none" stroke="url(#accent1)" stroke-width="1" opacity="0.4"/>
+  <text x="700" y="1940" text-anchor="middle" fill="#fff" font-size="20" font-weight="bold">Key Takeaways — E4M3 Choice</text>
+
+  <g transform="translate(80, 1960)">
+    <rect x="0" y="0" width="590" height="65" rx="8" fill="#0a0a20" stroke="#ff6b6b" stroke-width="1.5"/>
+    <text x="20" y="24" fill="#ff6b6b" font-size="13" font-weight="bold">★ Primary Reason: More Mantissa = More Precision</text>
+    <text x="20" y="46" fill="#8b8baa" font-size="11">3-bit mantissa gives 8 levels vs 4 levels per exponent step.</text>
+    <text x="20" y="62" fill="#8b8baa" font-size="11">This 2× finer precision directly improves gradient and weight accuracy.</text>
+
+    <rect x="630" y="0" width="590" height="65" rx="8" fill="#0a0a20" stroke="#43e97b" stroke-width="1.5"/>
+    <text x="650" y="24" fill="#43e97b" font-size="13" font-weight="bold">✓ Range Covered by Group Scaling</text>
+    <text x="650" y="46" fill="#8b8baa" font-size="11">Section 3's fine-grained quantization provides per-group scales.</text>
+    <text x="650" y="62" fill="#8b8baa" font-size="11">E5M2's extra range bits provide no additional benefit.</text>
+
+    <rect x="0" y="80" width="590" height="65" rx="8" fill="#0a0a20" stroke="#ffa502" stroke-width="1.5"/>
+    <text x="20" y="104" fill="#ffa502" font-size="13" font-weight="bold">💡 Insight: Synergy Between Sections 3 and 5</text>
+    <text x="20" y="126" fill="#8b8baa" font-size="11">Section 3 handles range → Section 5 maximizes precision.</text>
+    <text x="20" y="142" fill="#8b8baa" font-size="11">They are designed together as a unified strategy.</text>
+
+    <rect x="630" y="80" width="590" height="65" rx="8" fill="#0a0a20" stroke="#667eea" stroke-width="1.5"/>
+    <text x="650" y="104" fill="#667eea" font-size="13" font-weight="bold">🎯 Result: E4M3 for All Core Tensors</text>
+    <text x="650" y="126" fill="#8b8baa" font-size="11">DeepSeek uses E4M3 for both weights and activations.</text>
+    <text x="650" y="142" fill="#8b8baa" font-size="11">Consistent, high-quality quantization throughout.</text>
+  </g>
+</svg>

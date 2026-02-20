@@ -1,0 +1,389 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 2700" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a0a1a"/><stop offset="100%" style="stop-color:#0d1117"/>
+    </linearGradient>
+    <linearGradient id="headerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f0c29"/><stop offset="50%" style="stop-color:#302b63"/><stop offset="100%" style="stop-color:#24243e"/>
+    </linearGradient>
+    <linearGradient id="accent1" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#a18cd1"/><stop offset="100%" style="stop-color:#fbc2eb"/>
+    </linearGradient>
+    <linearGradient id="onlineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#43e97b"/><stop offset="100%" style="stop-color:#38f9d7"/>
+    </linearGradient>
+    <linearGradient id="offlineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#e74c3c"/><stop offset="100%" style="stop-color:#c0392b"/>
+    </linearGradient>
+    <filter id="shadow" x="-4%" y="-4%" width="108%" height="108%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+    <marker id="arrowGreen" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#43e97b">
+      <polygon points="0 0, 10 3.5, 0 7"/>
+    </marker>
+    <marker id="arrowBlue" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#4facfe">
+      <polygon points="0 0, 10 3.5, 0 7"/>
+    </marker>
+    <marker id="arrowRed" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#e74c3c">
+      <polygon points="0 0, 10 3.5, 0 7"/>
+    </marker>
+    <pattern id="dots" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+      <circle cx="20" cy="20" r="0.8" fill="#ffffff" opacity="0.04"/>
+    </pattern>
+  </defs>
+
+  <rect width="1400" height="2700" fill="url(#bgGrad)"/>
+  <rect width="1400" height="2700" fill="url(#dots)"/>
+
+  <!-- HEADER -->
+  <rect x="40" y="30" width="1320" height="130" rx="18" fill="url(#headerGrad)" filter="url(#shadow)"/>
+  <rect x="40" y="30" width="1320" height="130" rx="18" fill="none" stroke="url(#accent1)" stroke-width="1.5" opacity="0.5"/>
+  <rect x="70" y="55" width="6" height="80" rx="3" fill="url(#accent1)"/>
+  <text x="95" y="90" fill="#ffffff" font-size="30" font-weight="bold">Online vs. Offline Quantization</text>
+  <text x="95" y="118" fill="#8b8baa" font-size="15" letter-spacing="1.5">DYNAMIC SCALING • TRAINING STRATEGY • INFERENCE OPTIMIZATION</text>
+  <text x="95" y="142" fill="#a18cd1" font-size="12">DeepSeek Quantization Technique — Part 6 of 6</text>
+  <rect x="1080" y="60" width="250" height="40" rx="8" fill="#a18cd1" opacity="0.15" stroke="#a18cd1" stroke-width="1"/>
+  <text x="1205" y="85" text-anchor="middle" fill="#a18cd1" font-size="13" font-weight="bold">SCALE COMPUTATION</text>
+
+  <!-- OVERVIEW -->
+  <rect x="40" y="190" width="1320" height="130" rx="14" fill="#111128" filter="url(#shadow)"/>
+  <rect x="40" y="190" width="1320" height="130" rx="14" fill="none" stroke="#667eea" stroke-width="1" opacity="0.3"/>
+  <text x="80" y="228" fill="#c8c8e8" font-size="16" font-weight="bold">The Core Question: When Do You Compute the Quantization Scale?</text>
+  <text x="80" y="260" fill="#ddd" font-size="13">Every FP8 quantization operation requires a scale factor: <tspan fill="#ffa502" font-weight="bold">scale = max_fp8 / max(|tensor|)</tspan></text>
+  <text x="80" y="285" fill="#ddd" font-size="13">The critical design question is: <tspan fill="#ff6b6b" font-weight="bold">do you compute this per-batch at runtime (Online)?</tspan> Or <tspan fill="#999">pre-compute it once (Offline)?</tspan></text>
+  <text x="80" y="310" fill="#43e97b" font-size="13" font-weight="bold">DeepSeek uses Online for training, and a Hybrid approach for inference.</text>
+
+  <!-- OFFLINE QUANTIZATION -->
+  <rect x="40" y="350" width="640" height="680" rx="14" fill="#111128" filter="url(#shadow)"/>
+  <rect x="40" y="350" width="640" height="680" rx="14" fill="none" stroke="#e74c3c" stroke-width="2" opacity="0.5"/>
+  <rect x="40" y="350" width="640" height="55" rx="14" fill="#e74c3c" opacity="0.07"/>
+  <rect x="40" y="393" width="640" height="12" fill="#111128"/>
+  <text x="360" y="384" text-anchor="middle" fill="#e74c3c" font-size="20" font-weight="bold">✗ Offline (Delayed) Quantization</text>
+
+  <!-- Offline flow steps -->
+  <g transform="translate(70, 430)">
+    <!-- Step 1: Calibration -->
+    <rect x="0" y="0" width="565" height="90" rx="10" fill="#0a0a20" stroke="#e74c3c" stroke-width="1.5"/>
+    <circle cx="30" cy="32" r="20" fill="#e74c3c" opacity="0.2" stroke="#e74c3c" stroke-width="1.5"/>
+    <text x="30" y="38" text-anchor="middle" fill="#e74c3c" font-size="14" font-weight="bold">1</text>
+    <text x="62" y="22" fill="#e74c3c" font-size="13" font-weight="bold">Pre-Training Calibration Phase</text>
+    <text x="62" y="44" fill="#ddd" font-size="11">Run a small calibration dataset (e.g., 512 samples) through the model.</text>
+    <text x="62" y="62" fill="#ddd" font-size="11">Record the maximum absolute value seen in each tensor.</text>
+    <text x="62" y="80" fill="#ffa502" font-size="11" font-weight="bold">scale = max_fp8 / max_calibration_value  ← fixed forever</text>
+
+    <!-- Step 2: Store scales -->
+    <rect x="0" y="105" width="565" height="70" rx="10" fill="#0a0a20" stroke="#555" stroke-width="1"/>
+    <circle cx="30" cy="130" r="20" fill="#555" opacity="0.3" stroke="#555" stroke-width="1.5"/>
+    <text x="30" y="136" text-anchor="middle" fill="#888" font-size="14" font-weight="bold">2</text>
+    <text x="62" y="125" fill="#888" font-size="13" font-weight="bold">Store Scales</text>
+    <text x="62" y="148" fill="#666" font-size="11">Scale values saved to disk alongside model weights.</text>
+    <text x="62" y="165" fill="#666" font-size="11">Used unchanged for all future quantization operations.</text>
+
+    <!-- Step 3: Deployment -->
+    <rect x="0" y="190" width="565" height="70" rx="10" fill="#0a0a20" stroke="#555" stroke-width="1"/>
+    <circle cx="30" cy="215" r="20" fill="#555" opacity="0.3" stroke="#555" stroke-width="1.5"/>
+    <text x="30" y="221" text-anchor="middle" fill="#888" font-size="14" font-weight="bold">3</text>
+    <text x="62" y="210" fill="#888" font-size="13" font-weight="bold">Runtime Quantization</text>
+    <text x="62" y="233" fill="#666" font-size="11">Apply pre-computed scale to every new input tensor.</text>
+    <text x="62" y="250" fill="#666" font-size="11">No computation needed at runtime — very fast.</text>
+  </g>
+
+  <!-- Offline Problems -->
+  <rect x="70" y="720" width="575" height="260" rx="10" fill="#1a0808" stroke="#e74c3c" stroke-width="2"/>
+  <text x="90" y="748" fill="#e74c3c" font-size="14" font-weight="bold">Critical Problems with Offline Quantization</text>
+  <line x1="90" y1="758" x2="620" y2="758" stroke="#e74c3c" stroke-width="1" opacity="0.3"/>
+
+  <g transform="translate(90, 775)">
+    <circle cx="12" cy="12" r="8" fill="#e74c3c" opacity="0.3"/>
+    <text x="12" y="17" text-anchor="middle" fill="#e74c3c" font-size="10">!</text>
+    <text x="30" y="17" fill="#ddd" font-size="12" font-weight="bold">Distribution Shift</text>
+    <text x="30" y="35" fill="#999" font-size="11">Calibration data ≠ real training data. Unseen</text>
+    <text x="30" y="51" fill="#999" font-size="11">patterns may have larger/different value ranges.</text>
+
+    <circle cx="12" cy="78" r="8" fill="#e74c3c" opacity="0.3"/>
+    <text x="12" y="83" text-anchor="middle" fill="#e74c3c" font-size="10">!</text>
+    <text x="30" y="83" fill="#ddd" font-size="12" font-weight="bold">Overflow Risk</text>
+    <text x="30" y="101" fill="#999" font-size="11">If tensor value exceeds calibration max → clamped</text>
+    <text x="30" y="117" fill="#999" font-size="11">to FP8 max. Causes incorrect gradient signals.</text>
+
+    <circle cx="12" cy="144" r="8" fill="#e74c3c" opacity="0.3"/>
+    <text x="12" y="149" text-anchor="middle" fill="#e74c3c" font-size="10">!</text>
+    <text x="30" y="149" fill="#ddd" font-size="12" font-weight="bold">Rare Tokens Can Break Training</text>
+    <text x="30" y="167" fill="#999" font-size="11">Infrequent tokens with unusual activation patterns</text>
+    <text x="30" y="183" fill="#999" font-size="11">may not appear in calibration → wrong scale → NaN.</text>
+
+    <circle cx="12" cy="210" r="8" fill="#ffa502" opacity="0.3"/>
+    <text x="12" y="215" text-anchor="middle" fill="#ffa502" font-size="10">i</text>
+    <text x="30" y="215" fill="#ddd" font-size="12" font-weight="bold">Fine for Inference, Not Training</text>
+    <text x="30" y="233" fill="#999" font-size="11">Model weights don't change during inference → static</text>
+    <text x="30" y="249" fill="#999" font-size="11">scales are fine. But training changes weights every step!</text>
+  </g>
+
+  <!-- ONLINE QUANTIZATION -->
+  <rect x="720" y="350" width="640" height="680" rx="14" fill="#111128" filter="url(#shadow)"/>
+  <rect x="720" y="350" width="640" height="680" rx="14" fill="none" stroke="#43e97b" stroke-width="2.5" opacity="0.7"/>
+  <rect x="720" y="350" width="640" height="55" rx="14" fill="#43e97b" opacity="0.08"/>
+  <rect x="720" y="393" width="640" height="12" fill="#111128"/>
+  <text x="1040" y="384" text-anchor="middle" fill="#43e97b" font-size="20" font-weight="bold">★ Online Quantization (DeepSeek)</text>
+
+  <!-- Online flow steps -->
+  <g transform="translate(750, 430)">
+    <!-- Step 1: Get batch -->
+    <rect x="0" y="0" width="565" height="80" rx="10" fill="#0a2a1a" stroke="#43e97b" stroke-width="1.5"/>
+    <circle cx="30" cy="28" r="20" fill="#43e97b" opacity="0.2" stroke="#43e97b" stroke-width="1.5"/>
+    <text x="30" y="34" text-anchor="middle" fill="#43e97b" font-size="14" font-weight="bold">1</text>
+    <text x="62" y="22" fill="#43e97b" font-size="13" font-weight="bold">Receive Current Batch</text>
+    <text x="62" y="44" fill="#ddd" font-size="11">Get the actual weights/activations for THIS forward pass.</text>
+    <text x="62" y="62" fill="#ddd" font-size="11">These are the real values we need to quantize right now.</text>
+
+    <!-- Step 2: Compute scale NOW -->
+    <rect x="0" y="95" width="565" height="95" rx="10" fill="#0a2a1a" stroke="#43e97b" stroke-width="1.5"/>
+    <circle cx="30" cy="130" r="20" fill="#43e97b" opacity="0.2" stroke="#43e97b" stroke-width="1.5"/>
+    <text x="30" y="136" text-anchor="middle" fill="#43e97b" font-size="14" font-weight="bold">2</text>
+    <text x="62" y="118" fill="#43e97b" font-size="13" font-weight="bold">Compute Scale On-the-Fly</text>
+    <rect x="62" y="128" width="490" height="26" rx="5" fill="#0a1a0a" stroke="#43e97b" stroke-width="1"/>
+    <text x="307" y="145" text-anchor="middle" fill="#ffa502" font-size="13" font-weight="bold">scale = 448.0 / max(|current_tensor|)</text>
+    <text x="62" y="178" fill="#ddd" font-size="11">Computed from actual current data every single time.</text>
+
+    <!-- Step 3: Quantize with fresh scale -->
+    <rect x="0" y="205" width="565" height="80" rx="10" fill="#0a2a1a" stroke="#43e97b" stroke-width="1.5"/>
+    <circle cx="30" cy="233" r="20" fill="#43e97b" opacity="0.2" stroke="#43e97b" stroke-width="1.5"/>
+    <text x="30" y="239" text-anchor="middle" fill="#43e97b" font-size="14" font-weight="bold">3</text>
+    <text x="62" y="227" fill="#43e97b" font-size="13" font-weight="bold">Quantize with Fresh Scale</text>
+    <text x="62" y="249" fill="#ddd" font-size="11">fp8_tensor = round(tensor × scale) → perfectly fitted to this data.</text>
+    <text x="62" y="267" fill="#ddd" font-size="11">No overflow. Optimal precision for every batch.</text>
+
+    <!-- Step 4: Discard scale -->
+    <rect x="0" y="300" width="565" height="60" rx="10" fill="#0a0a20" stroke="#555" stroke-width="1"/>
+    <circle cx="30" cy="323" r="20" fill="#555" opacity="0.3" stroke="#555" stroke-width="1.5"/>
+    <text x="30" y="329" text-anchor="middle" fill="#888" font-size="14" font-weight="bold">4</text>
+    <text x="62" y="319" fill="#888" font-size="13" font-weight="bold">After GEMM — Scale Discarded</text>
+    <text x="62" y="341" fill="#666" font-size="11">Scale used once for this operation, then thrown away.</text>
+  </g>
+
+  <!-- Online Benefits -->
+  <rect x="750" y="720" width="575" height="260" rx="10" fill="#0a2a1a" stroke="#43e97b" stroke-width="2"/>
+  <text x="770" y="748" fill="#43e97b" font-size="14" font-weight="bold">Benefits of Online Quantization</text>
+  <line x1="770" y1="758" x2="1280" y2="758" stroke="#43e97b" stroke-width="1" opacity="0.3"/>
+
+  <g transform="translate(770, 775)">
+    <circle cx="12" cy="12" r="8" fill="#43e97b" opacity="0.3"/>
+    <text x="12" y="17" text-anchor="middle" fill="#43e97b" font-size="10">✓</text>
+    <text x="30" y="17" fill="#43e97b" font-size="12" font-weight="bold">Always Optimal Scale</text>
+    <text x="30" y="35" fill="#ddd" font-size="11">Scale computed from actual current values → no</text>
+    <text x="30" y="51" fill="#ddd" font-size="11">mismatch between scale and data distribution.</text>
+
+    <circle cx="12" cy="78" r="8" fill="#43e97b" opacity="0.3"/>
+    <text x="12" y="83" text-anchor="middle" fill="#43e97b" font-size="10">✓</text>
+    <text x="30" y="83" fill="#43e97b" font-size="12" font-weight="bold">Zero Overflow Risk</text>
+    <text x="30" y="101" fill="#ddd" font-size="11">Scale is derived from max(|tensor|) → impossible</text>
+    <text x="30" y="117" fill="#ddd" font-size="11">for any value to exceed the FP8 range.</text>
+
+    <circle cx="12" cy="144" r="8" fill="#43e97b" opacity="0.3"/>
+    <text x="12" y="149" text-anchor="middle" fill="#43e97b" font-size="10">✓</text>
+    <text x="30" y="149" fill="#43e97b" font-size="12" font-weight="bold">Handles Any Data Distribution</text>
+    <text x="30" y="167" fill="#ddd" font-size="11">Rare tokens, OOD inputs, early training instability —</text>
+    <text x="30" y="183" fill="#ddd" font-size="11">all handled gracefully with fresh scales each time.</text>
+
+    <circle cx="12" cy="210" r="8" fill="#4facfe" opacity="0.3"/>
+    <text x="12" y="215" text-anchor="middle" fill="#4facfe" font-size="10">+</text>
+    <text x="30" y="215" fill="#4facfe" font-size="12" font-weight="bold">Works With Dynamic Weights</text>
+    <text x="30" y="233" fill="#ddd" font-size="11">Weights change every training step → online scales</text>
+    <text x="30" y="249" fill="#ddd" font-size="11">always reflect the current weight distribution.</text>
+  </g>
+
+  <!-- INFERENCE STRATEGY: HYBRID -->
+  <rect x="40" y="1060" width="1320" height="560" rx="14" fill="#111128" filter="url(#shadow)"/>
+  <rect x="40" y="1060" width="1320" height="560" rx="14" fill="none" stroke="#a18cd1" stroke-width="1.5" opacity="0.4"/>
+  <rect x="40" y="1060" width="1320" height="55" rx="14" fill="#a18cd1" opacity="0.07"/>
+  <rect x="40" y="1103" width="1320" height="12" fill="#111128"/>
+  <text x="80" y="1095" fill="#a18cd1" font-size="20" font-weight="bold">🔀 DeepSeek Inference Strategy: Hybrid Online + Offline</text>
+  <text x="80" y="1128" fill="#8b8baa" font-size="13">During inference, DeepSeek uses different strategies for weights vs activations</text>
+
+  <!-- Explanation why hybrid -->
+  <rect x="80" y="1145" width="1240" height="65" rx="8" fill="#0a0a20" stroke="#a18cd1" stroke-width="1.5"/>
+  <text x="100" y="1170" fill="#a18cd1" font-size="13" font-weight="bold">Why Different Strategies for Weights vs Activations?</text>
+  <text x="100" y="1193" fill="#ddd" font-size="12">During inference, model <tspan fill="#ff6b6b" font-weight="bold">weights are fixed</tspan> (no more learning). But <tspan fill="#43e97b" font-weight="bold">activations vary per input</tspan> — different prompts produce very different activation values.</text>
+
+  <!-- Two columns: weights and activations -->
+  <rect x="70" y="1228" width="590" height="350" rx="12" fill="#0a1a2a" stroke="#4facfe" stroke-width="2"/>
+  <rect x="70" y="1228" width="590" height="45" rx="12" fill="#4facfe" opacity="0.07"/>
+  <rect x="70" y="1261" width="590" height="12" fill="#0a1a2a"/>
+  <text x="365" y="1258" text-anchor="middle" fill="#4facfe" font-size="16" font-weight="bold">Weights → Offline Scaling</text>
+
+  <g transform="translate(90, 1280)">
+    <text x="0" y="20" fill="#ddd" font-size="12" font-weight="bold">Why Offline Works for Weights:</text>
+    <text x="0" y="45" fill="#ddd" font-size="12">✓ Weights don't change during inference</text>
+    <text x="0" y="65" fill="#ddd" font-size="12">✓ Scale can be computed once at model load time</text>
+    <text x="0" y="85" fill="#ddd" font-size="12">✓ Zero runtime overhead for scale computation</text>
+    <text x="0" y="105" fill="#ddd" font-size="12">✓ Scale is cached in memory, reused for every request</text>
+
+    <rect x="0" y="120" width="550" height="55" rx="8" fill="#0a0a20" stroke="#4facfe" stroke-width="1.5"/>
+    <text x="20" y="143" fill="#4facfe" font-size="12" font-weight="bold">Process (done once at startup):</text>
+    <text x="20" y="163" fill="#ffa502" font-size="11">W_scale = 448 / max(|W|)  →  W_fp8 = quantize(W, W_scale)</text>
+
+    <rect x="0" y="188" width="550" height="55" rx="8" fill="#0a1a0a" stroke="#43e97b" stroke-width="1.5"/>
+    <text x="20" y="208" fill="#43e97b" font-size="12" font-weight="bold">Benefit: Inference Request Latency</text>
+    <text x="20" y="228" fill="#ddd" font-size="11">No per-request weight quantization needed → maximum speed</text>
+
+    <rect x="0" y="257" width="550" height="50" rx="6" fill="#0a0a20" stroke="#555" stroke-width="1"/>
+    <text x="20" y="275" fill="#8b8baa" font-size="11">Weight scale computed: once per model load</text>
+    <text x="20" y="292" fill="#8b8baa" font-size="11">Overhead: negligible (one-time cost, not per-token)</text>
+  </g>
+
+  <rect x="710" y="1228" width="620" height="350" rx="12" fill="#0a2a1a" stroke="#43e97b" stroke-width="2"/>
+  <rect x="710" y="1228" width="620" height="45" rx="12" fill="#43e97b" opacity="0.07"/>
+  <rect x="710" y="1261" width="620" height="12" fill="#0a2a1a"/>
+  <text x="1020" y="1258" text-anchor="middle" fill="#43e97b" font-size="16" font-weight="bold">Activations → Online Scaling</text>
+
+  <g transform="translate(730, 1280)">
+    <text x="0" y="20" fill="#ddd" font-size="12" font-weight="bold">Why Online Is Needed for Activations:</text>
+    <text x="0" y="45" fill="#ddd" font-size="12">✓ Each input produces different activation values</text>
+    <text x="0" y="65" fill="#ddd" font-size="12">✓ "What is 2+2?" vs code → very different activations</text>
+    <text x="0" y="85" fill="#ddd" font-size="12">✓ Pre-calibrated scale may overflow or underfit</text>
+    <text x="0" y="105" fill="#ddd" font-size="12">✓ Per-token precision critical for generation quality</text>
+
+    <rect x="0" y="120" width="580" height="55" rx="8" fill="#0a0a20" stroke="#43e97b" stroke-width="1.5"/>
+    <text x="20" y="143" fill="#43e97b" font-size="12" font-weight="bold">Process (per inference request):</text>
+    <text x="20" y="163" fill="#ffa502" font-size="11">x_scale = 448 / max(|x|)  →  x_fp8 = quantize(x, x_scale)</text>
+
+    <rect x="0" y="188" width="580" height="55" rx="8" fill="#0a2a1a" stroke="#43e97b" stroke-width="1.5"/>
+    <text x="20" y="208" fill="#43e97b" font-size="12" font-weight="bold">Benefit: Per-Token Accuracy</text>
+    <text x="20" y="228" fill="#ddd" font-size="11">Each token gets optimally quantized activations → quality maintained</text>
+
+    <rect x="0" y="257" width="580" height="50" rx="6" fill="#0a0a20" stroke="#555" stroke-width="1"/>
+    <text x="20" y="275" fill="#8b8baa" font-size="11">Activation scale computed: per generation step (per token)</text>
+    <text x="20" y="292" fill="#43e97b" font-size="11" font-weight="bold">Fast: just one max() call per 128 elements</text>
+  </g>
+
+  <!-- TRAINING VS INFERENCE TIMELINE -->
+  <rect x="40" y="1650" width="1320" height="500" rx="14" fill="#111128" filter="url(#shadow)"/>
+  <rect x="40" y="1650" width="1320" height="500" rx="14" fill="none" stroke="#667eea" stroke-width="1" opacity="0.3"/>
+  <text x="80" y="1690" fill="#c8c8e8" font-size="18" font-weight="bold">Complete Lifecycle: Training → Deployment → Inference</text>
+  <line x1="80" y1="1702" x2="620" y2="1702" stroke="url(#accent1)" stroke-width="2" opacity="0.5"/>
+
+  <g transform="translate(80, 1720)">
+    <!-- Timeline phases -->
+    <!-- Training -->
+    <rect x="0" y="0" width="360" height="340" rx="10" fill="#0a2a1a" stroke="#43e97b" stroke-width="2"/>
+    <rect x="0" y="0" width="360" height="38" rx="10" fill="#43e97b" opacity="0.1"/>
+    <rect x="0" y="30" width="360" height="8" fill="#0a2a1a"/>
+    <text x="180" y="26" text-anchor="middle" fill="#43e97b" font-size="14" font-weight="bold">TRAINING PHASE</text>
+    
+    <text x="20" y="60" fill="#ddd" font-size="11" font-weight="bold">Scale Strategy: 100% Online</text>
+    <text x="20" y="82" fill="#ddd" font-size="11">• Weights: online scale per batch</text>
+    <text x="20" y="100" fill="#ddd" font-size="11">• Activations: online scale per batch</text>
+    <text x="20" y="118" fill="#ddd" font-size="11">• Gradients: online scale per batch</text>
+    <text x="20" y="148" fill="#8b8baa" font-size="10" font-weight="bold">WHY:</text>
+    <text x="20" y="166" fill="#8b8baa" font-size="10">Weights change constantly (every step),</text>
+    <text x="20" y="182" fill="#8b8baa" font-size="10">batch distributions vary, rare tokens appear.</text>
+    <text x="20" y="198" fill="#8b8baa" font-size="10">Must handle everything dynamically.</text>
+
+    <rect x="15" y="218" width="330" height="45" rx="6" fill="#0a1a0a" stroke="#43e97b" stroke-width="1.5"/>
+    <text x="175" y="237" text-anchor="middle" fill="#43e97b" font-size="11" font-weight="bold">Duration: Pre-training run</text>
+    <text x="175" y="253" text-anchor="middle" fill="#8b8baa" font-size="10">(weeks to months on 1000s of GPUs)</text>
+
+    <rect x="15" y="275" width="330" height="55" rx="6" fill="#0a0a20" stroke="#667eea" stroke-width="1"/>
+    <text x="175" y="297" text-anchor="middle" fill="#667eea" font-size="11" font-weight="bold">Overhead per step:</text>
+    <text x="175" y="314" text-anchor="middle" fill="#ddd" font-size="10">max() computation per group — very cheap</text>
+    <text x="175" y="330" text-anchor="middle" fill="#43e97b" font-size="10">(&lt;0.1% of GEMM time)</text>
+
+    <!-- Arrow -->
+    <line x1="368" y1="170" x2="418" y2="170" stroke="#a18cd1" stroke-width="3" stroke-dasharray="8,4"/>
+    <text x="393" y="158" text-anchor="middle" fill="#a18cd1" font-size="11">done</text>
+
+    <!-- Post-training -->
+    <rect x="425" y="0" width="310" height="340" rx="10" fill="#0a0a2a" stroke="#a18cd1" stroke-width="2"/>
+    <rect x="425" y="0" width="310" height="38" rx="10" fill="#a18cd1" opacity="0.1"/>
+    <rect x="425" y="30" width="310" height="8" fill="#0a0a2a"/>
+    <text x="580" y="26" text-anchor="middle" fill="#a18cd1" font-size="14" font-weight="bold">POST-TRAINING</text>
+    
+    <text x="445" y="60" fill="#ddd" font-size="11" font-weight="bold">Model Export Preparation</text>
+    <text x="445" y="82" fill="#ddd" font-size="11">• Compute weight scales offline</text>
+    <text x="445" y="100" fill="#ddd" font-size="11">  (from final trained weights)</text>
+    <text x="445" y="118" fill="#ddd" font-size="11">• Quantize weights to FP8</text>
+    <text x="445" y="136" fill="#ddd" font-size="11">• Store W_fp8 + W_scale on disk</text>
+    
+    <text x="445" y="166" fill="#8b8baa" font-size="10" font-weight="bold">OUTPUT:</text>
+    <text x="445" y="184" fill="#8b8baa" font-size="10">FP8 model checkpoint with</text>
+    <text x="445" y="200" fill="#8b8baa" font-size="10">pre-computed weight scales.</text>
+
+    <rect x="440" y="220" width="280" height="55" rx="6" fill="#1a0a2a" stroke="#a18cd1" stroke-width="1.5"/>
+    <text x="580" y="243" text-anchor="middle" fill="#a18cd1" font-size="11" font-weight="bold">Done once per model version</text>
+    <text x="580" y="260" text-anchor="middle" fill="#666" font-size="10">Takes minutes, saves hours per day later</text>
+
+    <rect x="440" y="285" width="280" height="45" rx="6" fill="#0a0a20" stroke="#555" stroke-width="1"/>
+    <text x="580" y="308" text-anchor="middle" fill="#666" font-size="10">Activation scales NOT pre-computed</text>
+    <text x="580" y="323" text-anchor="middle" fill="#a18cd1" font-size="10">—computed per-token at serve time</text>
+
+    <!-- Arrow -->
+    <line x1="743" y1="170" x2="793" y2="170" stroke="#4facfe" stroke-width="3" stroke-dasharray="8,4"/>
+    <text x="768" y="158" text-anchor="middle" fill="#4facfe" font-size="11">deploy</text>
+
+    <!-- Inference -->
+    <rect x="800" y="0" width="420" height="340" rx="10" fill="#0a1a2a" stroke="#4facfe" stroke-width="2"/>
+    <rect x="800" y="0" width="420" height="38" rx="10" fill="#4facfe" opacity="0.07"/>
+    <rect x="800" y="30" width="420" height="8" fill="#0a1a2a"/>
+    <text x="1010" y="26" text-anchor="middle" fill="#4facfe" font-size="14" font-weight="bold">INFERENCE SERVING</text>
+    
+    <text x="820" y="60" fill="#ddd" font-size="11" font-weight="bold">Scale Strategy: Hybrid</text>
+    <text x="820" y="82" fill="#ddd" font-size="11">• Weights: offline (cached from disk)</text>
+    <text x="820" y="100" fill="#4facfe" font-size="11">• Activations: online (per token)</text>
+    <text x="820" y="130" fill="#8b8baa" font-size="10" font-weight="bold">PER INFERENCE REQUEST:</text>
+    <text x="820" y="150" fill="#8b8baa" font-size="10">1. User sends prompt</text>
+    <text x="820" y="168" fill="#8b8baa" font-size="10">2. Compute activation scale on-the-fly</text>
+    <text x="820" y="186" fill="#8b8baa" font-size="10">3. Apply cached weight scale</text>
+    <text x="820" y="204" fill="#8b8baa" font-size="10">4. Run FP8 GEMM → generate token</text>
+
+    <rect x="815" y="220" width="385" height="45" rx="6" fill="#0a1a0a" stroke="#43e97b" stroke-width="1.5"/>
+    <text x="1007" y="241" text-anchor="middle" fill="#43e97b" font-size="11" font-weight="bold">Benefit: Max Speed + Quality</text>
+    <text x="1007" y="258" text-anchor="middle" fill="#8b8baa" font-size="10">Offline weights = zero extra latency</text>
+
+    <rect x="815" y="275" width="385" height="55" rx="6" fill="#0a0a20" stroke="#667eea" stroke-width="1"/>
+    <text x="1007" y="295" text-anchor="middle" fill="#667eea" font-size="10" font-weight="bold">Per-token overhead:</text>
+    <text x="1007" y="312" text-anchor="middle" fill="#ddd" font-size="10">max() for activations only</text>
+    <text x="1007" y="328" text-anchor="middle" fill="#43e97b" font-size="10">Negligible (&lt;0.01% of total time)</text>
+  </g>
+
+  <!-- KEY TAKEAWAYS -->
+  <rect x="40" y="2180" width="1320" height="490" rx="14" fill="url(#headerGrad)" filter="url(#shadow)"/>
+  <rect x="40" y="2180" width="1320" height="490" rx="14" fill="none" stroke="url(#accent1)" stroke-width="1" opacity="0.4"/>
+  <text x="700" y="2220" text-anchor="middle" fill="#fff" font-size="20" font-weight="bold">Key Takeaways — Online vs. Offline Quantization</text>
+
+  <g transform="translate(80, 2245)">
+    <rect x="0" y="0" width="590" height="75" rx="8" fill="#0a0a20" stroke="#43e97b" stroke-width="1.5"/>
+    <text x="20" y="24" fill="#43e97b" font-size="13" font-weight="bold">★ Training: Always Online</text>
+    <text x="20" y="46" fill="#8b8baa" font-size="11">Every tensor quantized with a fresh scale every batch.</text>
+    <text x="20" y="63" fill="#8b8baa" font-size="11">Guarantees no overflow and optimal precision at all times.</text>
+
+    <rect x="630" y="0" width="590" height="75" rx="8" fill="#0a0a20" stroke="#4facfe" stroke-width="1.5"/>
+    <text x="650" y="24" fill="#4facfe" font-size="13" font-weight="bold">🔀 Inference: Hybrid Approach</text>
+    <text x="650" y="46" fill="#8b8baa" font-size="11">Weights: offline (stable, pre-computed once for speed).</text>
+    <text x="650" y="63" fill="#8b8baa" font-size="11">Activations: online (dynamic, per-token for quality).</text>
+
+    <rect x="0" y="90" width="590" height="75" rx="8" fill="#0a0a20" stroke="#ffa502" stroke-width="1.5"/>
+    <text x="20" y="114" fill="#ffa502" font-size="13" font-weight="bold">⚡ Overhead: Negligible</text>
+    <text x="20" y="136" fill="#8b8baa" font-size="11">Computing max() per 128 elements is extremely fast.</text>
+    <text x="20" y="153" fill="#8b8baa" font-size="11">Less than 0.1% of total GEMM computation time.</text>
+
+    <rect x="630" y="90" width="590" height="75" rx="8" fill="#0a0a20" stroke="#a18cd1" stroke-width="1.5"/>
+    <text x="650" y="114" fill="#a18cd1" font-size="13" font-weight="bold">🛡 Stability: No Overflow Ever</text>
+    <text x="650" y="136" fill="#8b8baa" font-size="11">By design (scale = max_fp8 / max_val), values can never</text>
+    <text x="650" y="153" fill="#8b8baa" font-size="11">exceed FP8 range → no NaN/Inf in training.</text>
+
+    <rect x="0" y="180" width="590" height="75" rx="8" fill="#0a0a20" stroke="#ff6b6b" stroke-width="1.5"/>
+    <text x="20" y="204" fill="#ff6b6b" font-size="13" font-weight="bold">⚠ Why Not Always Offline?</text>
+    <text x="20" y="226" fill="#8b8baa" font-size="11">Offline only works when data/weights are static.</text>
+    <text x="20" y="243" fill="#8b8baa" font-size="11">Training updates weights every step — scale would be stale.</text>
+
+    <rect x="630" y="180" width="590" height="75" rx="8" fill="#0a0a20" stroke="#667eea" stroke-width="1.5"/>
+    <text x="650" y="204" fill="#667eea" font-size="13" font-weight="bold">📐 Why Not Always Online?</text>
+    <text x="650" y="226" fill="#8b8baa" font-size="11">Inference weight scales: weights never change → recomputing</text>
+    <text x="650" y="243" fill="#8b8baa" font-size="11">per-request would be pure overhead with no benefit.</text>
+
+    <rect x="0" y="270" width="1220" height="75" rx="8" fill="#0a2a1a" stroke="#43e97b" stroke-width="2"/>
+    <text x="610" y="300" text-anchor="middle" fill="#43e97b" font-size="14" font-weight="bold">DeepSeek's Principle: Compute scales as frequently as data changes</text>
+    <text x="610" y="322" text-anchor="middle" fill="#ddd" font-size="12">Training (frequent weight updates) → Online always. Inference (static weights) → Offline weights, Online activations.</text>
+    <text x="610" y="342" text-anchor="middle" fill="#8b8baa" font-size="11">This adaptive strategy gives maximum quality in training and maximum speed in inference.</text>
+  </g>
+</svg>

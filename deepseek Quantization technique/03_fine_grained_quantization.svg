@@ -1,0 +1,391 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 2500" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a0a1a"/><stop offset="100%" style="stop-color:#0d1117"/>
+    </linearGradient>
+    <linearGradient id="headerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f0c29"/><stop offset="50%" style="stop-color:#302b63"/><stop offset="100%" style="stop-color:#24243e"/>
+    </linearGradient>
+    <linearGradient id="accent1" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#4facfe"/><stop offset="100%" style="stop-color:#00f2fe"/>
+    </linearGradient>
+    <linearGradient id="greenGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#43e97b"/><stop offset="100%" style="stop-color:#38f9d7"/>
+    </linearGradient>
+    <filter id="shadow" x="-4%" y="-4%" width="108%" height="108%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+    <marker id="arrowBlue" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#4facfe">
+      <polygon points="0 0, 10 3.5, 0 7"/>
+    </marker>
+    <marker id="arrowGreen" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#43e97b">
+      <polygon points="0 0, 10 3.5, 0 7"/>
+    </marker>
+    <marker id="arrowRed" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto" fill="#ff6b6b">
+      <polygon points="0 0, 10 3.5, 0 7"/>
+    </marker>
+    <pattern id="dots" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+      <circle cx="20" cy="20" r="0.8" fill="#ffffff" opacity="0.04"/>
+    </pattern>
+  </defs>
+
+  <rect width="1400" height="2500" fill="url(#bgGrad)"/>
+  <rect width="1400" height="2500" fill="url(#dots)"/>
+
+  <!-- HEADER -->
+  <rect x="40" y="30" width="1320" height="130" rx="18" fill="url(#headerGrad)" filter="url(#shadow)"/>
+  <rect x="40" y="30" width="1320" height="130" rx="18" fill="none" stroke="url(#accent1)" stroke-width="1.5" opacity="0.5"/>
+  <rect x="70" y="55" width="6" height="80" rx="3" fill="url(#accent1)"/>
+  <text x="95" y="90" fill="#ffffff" font-size="30" font-weight="bold">Fine-Grained Quantization</text>
+  <text x="95" y="118" fill="#8b8baa" font-size="15" letter-spacing="1.5">OUTLIER ISOLATION • GROUP-BASED SCALING • INDEPENDENT SCALE FACTORS</text>
+  <text x="95" y="142" fill="#4facfe" font-size="12">DeepSeek Quantization Technique — Part 3 of 6</text>
+  <rect x="1100" y="60" width="230" height="40" rx="8" fill="#4facfe" opacity="0.15" stroke="#4facfe" stroke-width="1"/>
+  <text x="1215" y="85" text-anchor="middle" fill="#4facfe" font-size="13" font-weight="bold">PRECISION CONTROL</text>
+
+  <!-- THE CORE PROBLEM -->
+  <rect x="40" y="190" width="1320" height="280" rx="14" fill="#111128" filter="url(#shadow)"/>
+  <rect x="40" y="190" width="1320" height="280" rx="14" fill="none" stroke="#e74c3c" stroke-width="1.5" opacity="0.4"/>
+  <rect x="40" y="190" width="1320" height="45" rx="14" fill="#e74c3c" opacity="0.08"/>
+  <rect x="40" y="222" width="1320" height="13" fill="#111128"/>
+  <text x="80" y="220" fill="#e74c3c" font-size="20" font-weight="bold">⚠ The Problem: Outliers Collapse Quantization Quality</text>
+
+  <text x="80" y="263" fill="#ddd" font-size="13">Standard FP8 quantization uses a single scale factor for an entire tensor:</text>
+  <rect x="80" y="278" width="700" height="42" rx="8" fill="#0a0a20" stroke="#e74c3c" stroke-width="1.5"/>
+  <text x="430" y="305" text-anchor="middle" fill="#ffa502" font-size="16" font-weight="bold">scale = max_fp8_val / max(|tensor|)</text>
+
+  <text x="80" y="345" fill="#ddd" font-size="13">If even <tspan fill="#ff6b6b" font-weight="bold">one outlier value</tspan> exists in the tensor, it forces an extremely small scale factor, compressing all</text>
+  <text x="80" y="368" fill="#ddd" font-size="13">other normal values into a tiny portion of the FP8 range — destroying their representational precision.</text>
+
+  <!-- Outlier visual example -->
+  <rect x="80" y="390" width="1240" height="62" rx="8" fill="#0a0a20" stroke="#e74c3c" stroke-width="1"/>
+  <text x="100" y="415" fill="#8b8baa" font-size="11" font-weight="bold">EXAMPLE TENSOR:</text>
+  <g transform="translate(260, 397)">
+    <!-- Normal values -->
+    <rect x="0" y="0" width="46" height="46" rx="4" fill="#1a3a5c" stroke="#4facfe" stroke-width="1"/>
+    <text x="23" y="28" text-anchor="middle" fill="#4facfe" font-size="11">0.3</text>
+    <rect x="50" y="0" width="46" height="46" rx="4" fill="#1a3a5c" stroke="#4facfe" stroke-width="1"/>
+    <text x="73" y="28" text-anchor="middle" fill="#4facfe" font-size="11">0.5</text>
+    <rect x="100" y="0" width="46" height="46" rx="4" fill="#1a3a5c" stroke="#4facfe" stroke-width="1"/>
+    <text x="123" y="28" text-anchor="middle" fill="#4facfe" font-size="11">0.2</text>
+    <rect x="150" y="0" width="46" height="46" rx="4" fill="#1a3a5c" stroke="#4facfe" stroke-width="1"/>
+    <text x="173" y="28" text-anchor="middle" fill="#4facfe" font-size="11">0.8</text>
+    <rect x="200" y="0" width="46" height="46" rx="4" fill="#1a3a5c" stroke="#4facfe" stroke-width="1"/>
+    <text x="223" y="28" text-anchor="middle" fill="#4facfe" font-size="11">0.4</text>
+    <!-- Outlier -->
+    <rect x="250" y="-4" width="70" height="54" rx="5" fill="#3a0a0a" stroke="#ff6b6b" stroke-width="3"/>
+    <text x="285" y="28" text-anchor="middle" fill="#ff6b6b" font-size="14" font-weight="bold">127.5</text>
+    <text x="285" y="44" text-anchor="middle" fill="#ff6b6b" font-size="8">OUTLIER!</text>
+    <!-- More normal values -->
+    <rect x="325" y="0" width="46" height="46" rx="4" fill="#1a3a5c" stroke="#4facfe" stroke-width="1"/>
+    <text x="348" y="28" text-anchor="middle" fill="#4facfe" font-size="11">0.6</text>
+    <rect x="375" y="0" width="46" height="46" rx="4" fill="#1a3a5c" stroke="#4facfe" stroke-width="1"/>
+    <text x="398" y="28" text-anchor="middle" fill="#4facfe" font-size="11">0.1</text>
+    <rect x="425" y="0" width="46" height="46" rx="4" fill="#1a3a5c" stroke="#4facfe" stroke-width="1"/>
+    <text x="448" y="28" text-anchor="middle" fill="#4facfe" font-size="11">0.7</text>
+    <text x="480" y="28" fill="#555" font-size="14">...×1000</text>
+  </g>
+  <text x="800" y="415" fill="#e74c3c" font-size="11">→ scale = 448/127.5 ≈ 3.5</text>
+  <text x="800" y="438" fill="#e74c3c" font-size="11">→ 0.3 × 3.5 ≈ 1 (loses all precision!)</text>
+
+  <!-- DEEPSEEK SOLUTION -->
+  <rect x="40" y="500" width="1320" height="120" rx="14" fill="#0a2a1a" filter="url(#shadow)"/>
+  <rect x="40" y="500" width="1320" height="120" rx="14" fill="none" stroke="#43e97b" stroke-width="2" opacity="0.7"/>
+  <text x="80" y="540" fill="#43e97b" font-size="22" font-weight="bold">💡 DeepSeek Solution: Independent Scale Factors per Group</text>
+  <text x="80" y="568" fill="#ddd" font-size="14">Divide tensors into small groups. Each group computes its own scale factor independently.</text>
+  <text x="80" y="592" fill="#ddd" font-size="14">An outlier in one group <tspan fill="#43e97b" font-weight="bold">only affects that group's scale</tspan> — all other groups remain accurately quantized.</text>
+  <rect x="80" y="598" width="460" height="12" rx="4" fill="#43e97b" opacity="0.08"/>
+
+  <!-- GROUP SIZES SECTION -->
+  <rect x="40" y="650" width="1320" height="630" rx="14" fill="#111128" filter="url(#shadow)"/>
+  <rect x="40" y="650" width="1320" height="630" rx="14" fill="none" stroke="#4facfe" stroke-width="1" opacity="0.3"/>
+  <text x="80" y="690" fill="#c8c8e8" font-size="18" font-weight="bold">Group Size Specifications</text>
+  <line x1="80" y1="702" x2="380" y2="702" stroke="url(#accent1)" stroke-width="2" opacity="0.5"/>
+
+  <!-- ACTIVATION GROUPS -->
+  <rect x="70" y="715" width="620" height="540" rx="12" fill="#0a1a2a" stroke="#4facfe" stroke-width="2"/>
+  <rect x="70" y="715" width="620" height="42" rx="12" fill="#4facfe" opacity="0.1"/>
+  <rect x="70" y="745" width="620" height="12" fill="#0a1a2a"/>
+  <text x="100" y="743" fill="#4facfe" font-size="17" font-weight="bold">Activation Groups: 1 × 128</text>
+  <text x="100" y="770" fill="#8b8baa" font-size="12">Each row of 128 consecutive elements shares one scale factor</text>
+
+  <!-- Grid visualization -->
+  <g transform="translate(90, 790)">
+    <text x="0" y="0" fill="#667eea" font-size="11" font-weight="bold">ACTIVATION MATRIX (conceptual):</text>
+    
+    <!-- Row 1 - has outlier -->
+    <rect x="0" y="15" width="560" height="38" rx="4" fill="#2a1010" stroke="#ff6b6b" stroke-width="1.5"/>
+    <rect x="0" y="15" width="412" height="38" rx="0" fill="#1a0a0a" opacity="0.5"/>
+    <text x="8" y="30" fill="#8b8baa" font-size="9">Row 0:</text>
+    <text x="65" y="30" fill="#4facfe" font-size="9">0.3  0.5  0.2  0.8  0.4  ...</text>
+    <rect x="380" y="19" width="55" height="29" rx="3" fill="#e74c3c" opacity="0.4"/>
+    <text x="407" y="38" text-anchor="middle" fill="#ff6b6b" font-size="10" font-weight="bold">127.5</text>
+    <text x="445" y="30" fill="#4facfe" font-size="9">... 0.6  0.3</text>
+    <text x="442" y="45" fill="#ff6b6b" font-size="9">← outlier</text>
+    <rect x="520" y="19" width="40" height="29" rx="4" fill="#ff6b6b" opacity="0.2" stroke="#ff6b6b" stroke-width="1"/>
+    <text x="540" y="38" text-anchor="middle" fill="#ff6b6b" font-size="9" font-weight="bold">s₀</text>
+
+    <!-- Row 2 - normal -->
+    <rect x="0" y="58" width="560" height="38" rx="4" fill="#0a1830" stroke="#4facfe" stroke-width="1"/>
+    <text x="8" y="73" fill="#8b8baa" font-size="9">Row 1:</text>
+    <text x="65" y="73" fill="#4facfe" font-size="9">0.4  0.5  0.3  0.6  0.2  0.5  0.4  ... 0.3  0.4  0.5  0.2</text>
+    <rect x="520" y="63" width="40" height="29" rx="4" fill="#43e97b" opacity="0.2" stroke="#43e97b" stroke-width="1"/>
+    <text x="540" y="82" text-anchor="middle" fill="#43e97b" font-size="9" font-weight="bold">s₁</text>
+
+    <!-- Row 3 - normal -->
+    <rect x="0" y="101" width="560" height="38" rx="4" fill="#0a1830" stroke="#4facfe" stroke-width="1"/>
+    <text x="8" y="116" fill="#8b8baa" font-size="9">Row 2:</text>
+    <text x="65" y="116" fill="#4facfe" font-size="9">0.2  0.1  0.6  0.4  0.3  0.2  0.5  ... 0.1  0.4  0.2  0.6</text>
+    <rect x="520" y="106" width="40" height="29" rx="4" fill="#43e97b" opacity="0.2" stroke="#43e97b" stroke-width="1"/>
+    <text x="540" y="125" text-anchor="middle" fill="#43e97b" font-size="9" font-weight="bold">s₂</text>
+
+    <!-- Row 4 - normal -->
+    <rect x="0" y="144" width="560" height="38" rx="4" fill="#0a1830" stroke="#4facfe" stroke-width="1"/>
+    <text x="8" y="159" fill="#8b8baa" font-size="9">Row 3:</text>
+    <text x="65" y="159" fill="#4facfe" font-size="9">0.7  0.8  0.3  0.5  0.6  0.4  0.7  ... 0.6  0.3  0.8  0.4</text>
+    <rect x="520" y="149" width="40" height="29" rx="4" fill="#43e97b" opacity="0.2" stroke="#43e97b" stroke-width="1"/>
+    <text x="540" y="168" text-anchor="middle" fill="#43e97b" font-size="9" font-weight="bold">s₃</text>
+
+    <text x="230" y="210" fill="#555" font-size="11">⋮  (128 elements each)  ⋮</text>
+
+    <rect x="0" y="225" width="560" height="55" rx="8" fill="#0a2a1a" stroke="#43e97b" stroke-width="1.5"/>
+    <text x="20" y="248" fill="#43e97b" font-size="12" font-weight="bold">Key Insight:</text>
+    <text x="20" y="268" fill="#ddd" font-size="11">Outlier in Row 0 → only s₀ is affected. Rows 1,2,3... have optimal, high-quality scales s₁,s₂,s₃</text>
+    <text x="20" y="283" fill="#ddd" font-size="11">The rest of the matrix maintains full quantization quality!</text>
+
+    <!-- Scale factor annotation -->
+    <rect x="0" y="295" width="560" height="45" rx="6" fill="#0a0a20" stroke="#667eea" stroke-width="1"/>
+    <text x="20" y="315" fill="#667eea" font-size="11" font-weight="bold">Scale formula per group:</text>
+    <text x="160" y="315" fill="#ffa502" font-size="12" font-weight="bold">s_i = max_fp8 / max(|row_i|)</text>
+    <text x="20" y="333" fill="#8b8baa" font-size="10">Each row independently: no cross-contamination from outliers in other rows</text>
+  </g>
+
+  <!-- WEIGHT GROUPS -->
+  <rect x="730" y="715" width="610" height="540" rx="12" fill="#0a1a2a" stroke="#667eea" stroke-width="2"/>
+  <rect x="730" y="715" width="610" height="42" rx="12" fill="#667eea" opacity="0.1"/>
+  <rect x="730" y="745" width="610" height="12" fill="#0a1a2a"/>
+  <text x="760" y="743" fill="#667eea" font-size="17" font-weight="bold">Weight Groups: 128 × 128</text>
+  <text x="760" y="770" fill="#8b8baa" font-size="12">Each 128×128 tile of the weight matrix gets its own scale</text>
+
+  <!-- Weight matrix grid visualization -->
+  <g transform="translate(760, 790)">
+    <text x="0" y="0" fill="#667eea" font-size="11" font-weight="bold">WEIGHT MATRIX TILES:</text>
+
+    <!-- 2x3 grid of tiles -->
+    <!-- Tile A (0,0) normal -->
+    <rect x="0" y="15" width="130" height="110" rx="8" fill="#1a1a40" stroke="#667eea" stroke-width="1.5"/>
+    <text x="65" y="58" text-anchor="middle" fill="#667eea" font-size="12" font-weight="bold">Tile A</text>
+    <text x="65" y="80" text-anchor="middle" fill="#8b8baa" font-size="10">128 × 128</text>
+    <text x="65" y="100" text-anchor="middle" fill="#8b8baa" font-size="9">Normal values</text>
+    <rect x="10" y="106" width="110" height="16" rx="4" fill="#667eea" opacity="0.2"/>
+    <text x="65" y="119" text-anchor="middle" fill="#667eea" font-size="9" font-weight="bold">scale_A = 2.3</text>
+
+    <!-- Tile B (0,1) normal -->
+    <rect x="145" y="15" width="130" height="110" rx="8" fill="#1a1a40" stroke="#667eea" stroke-width="1.5"/>
+    <text x="210" y="58" text-anchor="middle" fill="#667eea" font-size="12" font-weight="bold">Tile B</text>
+    <text x="210" y="80" text-anchor="middle" fill="#8b8baa" font-size="10">128 × 128</text>
+    <text x="210" y="100" text-anchor="middle" fill="#8b8baa" font-size="9">Normal values</text>
+    <rect x="155" y="106" width="110" height="16" rx="4" fill="#667eea" opacity="0.2"/>
+    <text x="210" y="119" text-anchor="middle" fill="#667eea" font-size="9" font-weight="bold">scale_B = 1.8</text>
+
+    <!-- Tile C (0,2) - has outlier -->
+    <rect x="290" y="10" width="140" height="120" rx="8" fill="#2a1010" stroke="#ff6b6b" stroke-width="2.5"/>
+    <text x="360" y="54" text-anchor="middle" fill="#ff6b6b" font-size="12" font-weight="bold">Tile C</text>
+    <text x="360" y="74" text-anchor="middle" fill="#8b8baa" font-size="10">128 × 128</text>
+    <text x="360" y="92" text-anchor="middle" fill="#ff6b6b" font-size="10" font-weight="bold">Has OUTLIER!</text>
+    <rect x="300" y="100" width="120" height="25" rx="4" fill="#ff6b6b" opacity="0.2"/>
+    <text x="360" y="117" text-anchor="middle" fill="#ff6b6b" font-size="9" font-weight="bold">scale_C = 0.004</text>
+
+    <!-- Tile D (1,0) normal -->
+    <rect x="0" y="145" width="130" height="110" rx="8" fill="#1a1a40" stroke="#667eea" stroke-width="1.5"/>
+    <text x="65" y="188" text-anchor="middle" fill="#667eea" font-size="12" font-weight="bold">Tile D</text>
+    <text x="65" y="210" text-anchor="middle" fill="#8b8baa" font-size="10">128 × 128</text>
+    <text x="65" y="230" text-anchor="middle" fill="#8b8baa" font-size="9">Normal values</text>
+    <rect x="10" y="236" width="110" height="16" rx="4" fill="#667eea" opacity="0.2"/>
+    <text x="65" y="249" text-anchor="middle" fill="#667eea" font-size="9" font-weight="bold">scale_D = 3.1</text>
+
+    <!-- Tile E (1,1) normal -->
+    <rect x="145" y="145" width="130" height="110" rx="8" fill="#1a1a40" stroke="#667eea" stroke-width="1.5"/>
+    <text x="210" y="188" text-anchor="middle" fill="#667eea" font-size="12" font-weight="bold">Tile E</text>
+    <text x="210" y="210" text-anchor="middle" fill="#8b8baa" font-size="10">128 × 128</text>
+    <text x="210" y="230" text-anchor="middle" fill="#8b8baa" font-size="9">Normal values</text>
+    <rect x="155" y="236" width="110" height="16" rx="4" fill="#667eea" opacity="0.2"/>
+    <text x="210" y="249" text-anchor="middle" fill="#667eea" font-size="9" font-weight="bold">scale_E = 2.7</text>
+
+    <!-- Isolation annotation -->
+    <rect x="0" y="270" width="440" height="55" rx="8" fill="#0a2a1a" stroke="#43e97b" stroke-width="1.5"/>
+    <text x="20" y="293" fill="#43e97b" font-size="12" font-weight="bold">Isolation achieved!</text>
+    <text x="20" y="313" fill="#ddd" font-size="11">Tile C's large scale has zero effect on A, B, D, E — each tile independent</text>
+
+    <rect x="0" y="340" width="440" height="45" rx="6" fill="#0a0a20" stroke="#667eea" stroke-width="1"/>
+    <text x="20" y="360" fill="#667eea" font-size="11" font-weight="bold">Scale formula per tile:</text>
+    <text x="180" y="360" fill="#ffa502" font-size="12" font-weight="bold">s_tile = 448 / max(|W_tile|)</text>
+    <text x="20" y="378" fill="#8b8baa" font-size="10">Computed independently for every 128×128 sub-matrix</text>
+  </g>
+
+  <!-- Standard vs Fine-grained Comparison -->
+  <rect x="40" y="1310" width="1320" height="380" rx="14" fill="#111128" filter="url(#shadow)"/>
+  <rect x="40" y="1310" width="1320" height="380" rx="14" fill="none" stroke="#667eea" stroke-width="1" opacity="0.3"/>
+  <text x="80" y="1350" fill="#c8c8e8" font-size="18" font-weight="bold">Standard vs Fine-Grained Quantization — Visual Comparison</text>
+  <line x1="80" y1="1362" x2="620" y2="1362" stroke="url(#accent1)" stroke-width="2" opacity="0.5"/>
+
+  <!-- Standard (bad) -->
+  <rect x="70" y="1375" width="610" height="290" rx="10" fill="#1a0a0a" stroke="#e74c3c" stroke-width="2"/>
+  <text x="90" y="1403" fill="#e74c3c" font-size="15" font-weight="bold">✗ Standard Quantization (One Scale)</text>
+  
+  <!-- One scale bar visualization -->
+  <rect x="90" y="1420" width="560" height="30" rx="6" fill="#0a0a20" stroke="#333" stroke-width="1"/>
+  <text x="100" y="1440" fill="#8b8baa" font-size="10">Full tensor values [0.2, 0.3, ... 127.5, ... 0.4, 0.6]</text>
+  <text x="500" y="1440" fill="#e74c3c" font-size="10" font-weight="bold">Single scale</text>
+  
+  <!-- FP8 range representation -->
+  <rect x="90" y="1462" width="560" height="28" rx="4" fill="#0a0a1a" stroke="#333" stroke-width="1"/>
+  <text x="100" y="1481" fill="#555" font-size="10">FP8 range coverage:</text>
+  <!-- Outlier takes up almost all of range -->
+  <rect x="220" y="1466" width="8" height="20" rx="2" fill="#ff6b6b" opacity="0.9"/>
+  <text x="224" y="1490" text-anchor="middle" fill="#ff6b6b" font-size="8">127.5</text>
+  <!-- Normal values crammed into a tiny section -->
+  <rect x="228" y="1466" width="410" height="20" rx="2" fill="#333" opacity="0.5"/>
+  <text x="430" y="1478" text-anchor="middle" fill="#555" font-size="8">all other values (0.1 to 0.8) crammed into 1-3 FP8 levels</text>
+
+  <text x="90" y="1515" fill="#e74c3c" font-size="12" font-weight="bold">Problem: Normal values 0.1–0.8 all map to same FP8 level ≈ 1</text>
+  <text x="90" y="1535" fill="#999" font-size="11">Cannot distinguish 0.2 from 0.8 — these become the same quantized value!</text>
+
+  <rect x="90" y="1555" width="560" height="40" rx="6" fill="#2a0a0a" stroke="#e74c3c" stroke-width="1"/>
+  <text x="110" y="1578" fill="#e74c3c" font-size="12" font-weight="bold">Lost information → degraded model quality → slow convergence</text>
+
+  <rect x="90" y="1605" width="560" height="40" rx="6" fill="#0a0a20" stroke="#555" stroke-width="1"/>
+  <text x="110" y="1630" fill="#999" font-size="11">Memory cost: 1 scale per tensor (negligible)</text>
+
+  <!-- Fine-grained (good) -->
+  <rect x="720" y="1375" width="620" height="290" rx="10" fill="#0a2a1a" stroke="#43e97b" stroke-width="2"/>
+  <text x="740" y="1403" fill="#43e97b" font-size="15" font-weight="bold">✓ Fine-Grained Quantization (Per-Group Scale)</text>
+
+  <!-- Group scales visualization -->
+  <g transform="translate(740, 1420)">
+    <rect x="0" y="0" width="560" height="28" rx="6" fill="#0a0a20" stroke="#555" stroke-width="1"/>
+    <text x="10" y="19" fill="#8b8baa" font-size="10">Group 0 [0.2, 0.3, ..., 0.6]: max=0.6 → scale = 748</text>
+    <rect x="450" y="4" width="100" height="20" rx="3" fill="#43e97b" opacity="0.2" stroke="#43e97b" stroke-width="1"/>
+    <text x="500" y="19" text-anchor="middle" fill="#43e97b" font-size="9" font-weight="bold">s₀ = 748</text>
+
+    <rect x="0" y="34" width="560" height="28" rx="6" fill="#2a0a0a" stroke="#ff6b6b" stroke-width="1"/>
+    <text x="10" y="53" fill="#8b8baa" font-size="10">Group 1 [0.4, ..., 127.5, ..., 0.3]: max=127.5 → scale = 3.5</text>
+    <rect x="450" y="38" width="100" height="20" rx="3" fill="#ff6b6b" opacity="0.2" stroke="#ff6b6b" stroke-width="1"/>
+    <text x="500" y="53" text-anchor="middle" fill="#ff6b6b" font-size="9" font-weight="bold">s₁ = 3.5</text>
+
+    <rect x="0" y="68" width="560" height="28" rx="6" fill="#0a0a20" stroke="#555" stroke-width="1"/>
+    <text x="10" y="87" fill="#8b8baa" font-size="10">Group 2 [0.7, 0.5, ..., 0.8, 0.4]: max=0.8 → scale = 560</text>
+    <rect x="450" y="72" width="100" height="20" rx="3" fill="#43e97b" opacity="0.2" stroke="#43e97b" stroke-width="1"/>
+    <text x="500" y="87" text-anchor="middle" fill="#43e97b" font-size="9" font-weight="bold">s₂ = 560</text>
+  </g>
+
+  <text x="740" y="1570" fill="#43e97b" font-size="12" font-weight="bold">Group 0 and Group 2: full FP8 range used for 0.1–0.8 values!</text>
+  <text x="740" y="1590" fill="#ddd" font-size="11">Can distinguish 0.2 from 0.8 → precision restored for 127 of 128 groups</text>
+
+  <rect x="740" y="1605" width="560" height="40" rx="6" fill="#0a2a1a" stroke="#43e97b" stroke-width="1.5"/>
+  <text x="760" y="1630" fill="#43e97b" font-size="12" font-weight="bold">Only Group 1 (the outlier group) pays a precision cost</text>
+
+  <rect x="740" y="1650" width="560" height="40" rx="6" fill="#0a0a20" stroke="#667eea" stroke-width="1"/>
+  <text x="760" y="1675" fill="#667eea" font-size="11">Overhead: 1 FP32 scale per 128 elements = 3.1% memory overhead (negligible)</text>
+
+  <!-- MECHANISM DEEP DIVE -->
+  <rect x="40" y="1720" width="1320" height="340" rx="14" fill="#111128" filter="url(#shadow)"/>
+  <rect x="40" y="1720" width="1320" height="340" rx="14" fill="none" stroke="#4facfe" stroke-width="1" opacity="0.3"/>
+  <text x="80" y="1760" fill="#c8c8e8" font-size="18" font-weight="bold">Step-by-Step Quantization Mechanism</text>
+  <line x1="80" y1="1772" x2="450" y2="1772" stroke="url(#accent1)" stroke-width="2" opacity="0.5"/>
+
+  <g transform="translate(80, 1790)">
+    <!-- Step 1 -->
+    <circle cx="25" cy="25" r="20" fill="#4facfe" opacity="0.2" stroke="#4facfe" stroke-width="1.5"/>
+    <text x="25" y="31" text-anchor="middle" fill="#4facfe" font-size="14" font-weight="bold">1</text>
+    <rect x="55" y="5" width="500" height="40" rx="6" fill="#0a0a20" stroke="#4facfe" stroke-width="1"/>
+    <text x="75" y="21" fill="#4facfe" font-size="12" font-weight="bold">Divide tensor into groups</text>
+    <text x="75" y="38" fill="#8b8baa" font-size="11">Activations → 1×128 row slices  |  Weights → 128×128 tiles</text>
+
+    <!-- Step 2 -->
+    <circle cx="25" cy="85" r="20" fill="#ffa502" opacity="0.2" stroke="#ffa502" stroke-width="1.5"/>
+    <text x="25" y="91" text-anchor="middle" fill="#ffa502" font-size="14" font-weight="bold">2</text>
+    <rect x="55" y="65" width="500" height="40" rx="6" fill="#0a0a20" stroke="#ffa502" stroke-width="1"/>
+    <text x="75" y="81" fill="#ffa502" font-size="12" font-weight="bold">Compute scale per group</text>
+    <text x="75" y="98" fill="#8b8baa" font-size="11">s = 448.0 / max(abs(group))  — using E4M3 max value 448</text>
+
+    <!-- Step 3 -->
+    <circle cx="25" cy="145" r="20" fill="#ff6b6b" opacity="0.2" stroke="#ff6b6b" stroke-width="1.5"/>
+    <text x="25" y="151" text-anchor="middle" fill="#ff6b6b" font-size="14" font-weight="bold">3</text>
+    <rect x="55" y="125" width="500" height="40" rx="6" fill="#0a0a20" stroke="#ff6b6b" stroke-width="1"/>
+    <text x="75" y="141" fill="#ff6b6b" font-size="12" font-weight="bold">Quantize elements</text>
+    <text x="75" y="158" fill="#8b8baa" font-size="11">fp8_val = round(fp32_val × s)  — maps to integer in [-448, 448]</text>
+
+    <!-- Step 4 -->
+    <circle cx="25" cy="205" r="20" fill="#43e97b" opacity="0.2" stroke="#43e97b" stroke-width="1.5"/>
+    <text x="25" y="211" text-anchor="middle" fill="#43e97b" font-size="14" font-weight="bold">4</text>
+    <rect x="55" y="185" width="500" height="40" rx="6" fill="#0a0a20" stroke="#43e97b" stroke-width="1"/>
+    <text x="75" y="201" fill="#43e97b" font-size="12" font-weight="bold">Store scale for dequantization</text>
+    <text x="75" y="218" fill="#8b8baa" font-size="11">Scale s stored in FP32 alongside quantized data for later recovery</text>
+
+    <!-- Step 5 -->
+    <circle cx="25" cy="265" r="20" fill="#667eea" opacity="0.2" stroke="#667eea" stroke-width="1.5"/>
+    <text x="25" y="271" text-anchor="middle" fill="#667eea" font-size="14" font-weight="bold">5</text>
+    <rect x="55" y="245" width="500" height="40" rx="6" fill="#0a0a20" stroke="#667eea" stroke-width="1"/>
+    <text x="75" y="261" fill="#667eea" font-size="12" font-weight="bold">Dequantize after GEMM</text>
+    <text x="75" y="278" fill="#8b8baa" font-size="11">fp32_approx = fp8_val / s  — multiply output by 1/s to recover scale</text>
+
+    <!-- Right column - benefits detail -->
+    <rect x="640" y="0" width="640" height="310" rx="10" fill="#0a1a2a" stroke="#4facfe" stroke-width="1.5"/>
+    <text x="660" y="28" fill="#4facfe" font-size="14" font-weight="bold">Why This Works — Mathematical Intuition</text>
+    <line x1="660" y1="38" x2="1260" y2="38" stroke="#4facfe" stroke-width="1" opacity="0.3"/>
+    <text x="660" y="60" fill="#ddd" font-size="12">With standard quantization:</text>
+    <text x="660" y="80" fill="#ffa502" font-size="11">all 1024 values share one scale = 3.5</text>
+    <text x="660" y="100" fill="#e74c3c" font-size="11">→ values 0.1-0.8 map to FP8 ≈ 0-2 levels only</text>
+    <text x="660" y="130" fill="#ddd" font-size="12">With fine-grained (1×128 groups):</text>
+    <text x="660" y="150" fill="#43e97b" font-size="11">group without outlier: scale = 560</text>
+    <text x="660" y="170" fill="#43e97b" font-size="11">→ 0.1 maps to FP8 56, 0.8 maps to FP8 448</text>
+    <text x="660" y="190" fill="#43e97b" font-size="11">→ 392 distinct FP8 levels available for 0.1-0.8!</text>
+    <rect x="660" y="205" width="600" height="55" rx="6" fill="#0a2a1a" stroke="#43e97b" stroke-width="1.5"/>
+    <text x="680" y="227" fill="#43e97b" font-size="12" font-weight="bold">Result: 195× more precision levels for non-outlier groups</text>
+    <text x="680" y="248" fill="#ddd" font-size="11">2 FP8 levels → 392 FP8 levels for the same value range</text>
+
+    <rect x="660" y="265" width="600" height="42" rx="6" fill="#0a0a20" stroke="#555" stroke-width="1"/>
+    <text x="680" y="283" fill="#8b8baa" font-size="11">Memory overhead: 1 FP32 scale per 128 values = 3.1% extra</text>
+    <text x="680" y="300" fill="#43e97b" font-size="11" font-weight="bold">Tradeoff: tiny memory cost → massive precision gain</text>
+  </g>
+
+  <!-- KEY TAKEAWAYS -->
+  <rect x="40" y="2090" width="1320" height="380" rx="14" fill="url(#headerGrad)" filter="url(#shadow)"/>
+  <rect x="40" y="2090" width="1320" height="380" rx="14" fill="none" stroke="url(#accent1)" stroke-width="1" opacity="0.4"/>
+  <text x="700" y="2130" text-anchor="middle" fill="#fff" font-size="20" font-weight="bold">Key Takeaways — Fine-Grained Quantization</text>
+
+  <g transform="translate(80, 2150)">
+    <rect x="0" y="0" width="600" height="75" rx="8" fill="#0a0a20" stroke="#43e97b" stroke-width="1.5"/>
+    <text x="20" y="24" fill="#43e97b" font-size="13" font-weight="bold">✓ Precision: Outlier Isolation</text>
+    <text x="20" y="46" fill="#8b8baa" font-size="11">Outliers in one group cannot corrupt other groups.</text>
+    <text x="20" y="64" fill="#8b8baa" font-size="11">Each 128-element slice independently optimizes its scale.</text>
+
+    <rect x="0" y="90" width="600" height="75" rx="8" fill="#0a0a20" stroke="#4facfe" stroke-width="1.5"/>
+    <text x="20" y="114" fill="#4facfe" font-size="13" font-weight="bold">📐 Groups: 1×128 (act) / 128×128 (wgts)</text>
+    <text x="20" y="136" fill="#8b8baa" font-size="11">Activation rows and weight tiles chosen to balance</text>
+    <text x="20" y="154" fill="#8b8baa" font-size="11">computation efficiency with precision granularity.</text>
+
+    <rect x="0" y="180" width="600" height="75" rx="8" fill="#0a0a20" stroke="#ffa502" stroke-width="1.5"/>
+    <text x="20" y="204" fill="#ffa502" font-size="13" font-weight="bold">💡 Synergy: Works With E4M3 Choice</text>
+    <text x="20" y="226" fill="#8b8baa" font-size="11">Fine-grained scaling covers E4M3's limited range (448).</text>
+    <text x="20" y="244" fill="#8b8baa" font-size="11">This is WHY DeepSeek can choose E4M3 over E5M2.</text>
+
+    <rect x="640" y="0" width="600" height="75" rx="8" fill="#0a0a20" stroke="#ff6b6b" stroke-width="1.5"/>
+    <text x="660" y="24" fill="#ff6b6b" font-size="13" font-weight="bold">⚡ Performance: Minimal Overhead</text>
+    <text x="660" y="46" fill="#8b8baa" font-size="11">Scale storage = 3.1% extra memory per tensor.</text>
+    <text x="660" y="64" fill="#8b8baa" font-size="11">Negligible cost for massive quality improvement.</text>
+
+    <rect x="640" y="90" width="600" height="75" rx="8" fill="#0a0a20" stroke="#667eea" stroke-width="1.5"/>
+    <text x="660" y="114" fill="#667eea" font-size="13" font-weight="bold">🔢 Formula: s = max_fp8 / max(|group|)</text>
+    <text x="660" y="136" fill="#8b8baa" font-size="11">Simple per-group max computation added before</text>
+    <text x="660" y="154" fill="#8b8baa" font-size="11">each GEMM — no complex calibration needed.</text>
+
+    <rect x="640" y="180" width="600" height="75" rx="8" fill="#0a0a20" stroke="#a18cd1" stroke-width="1.5"/>
+    <text x="660" y="204" fill="#a18cd1" font-size="13" font-weight="bold">🔗 Enables: Full FP8 Training Quality</text>
+    <text x="660" y="226" fill="#8b8baa" font-size="11">Without fine-grained quantization, FP8 training would</text>
+    <text x="660" y="244" fill="#8b8baa" font-size="11">suffer significant quality loss vs BF16.</text>
+  </g>
+
+  <rect x="80" y="2398" width="1240" height="50" rx="8" fill="#0a2a1a" stroke="#43e97b" stroke-width="1.5"/>
+  <text x="700" y="2428" text-anchor="middle" fill="#43e97b" font-size="13" font-weight="bold">Fine-grained quantization + Online scaling + E4M3 = FP8 quality that matches BF16 baseline</text>
+</svg>
