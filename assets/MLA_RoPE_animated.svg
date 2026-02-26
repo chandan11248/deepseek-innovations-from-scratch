@@ -1,4 +1,4 @@
-<svg width="1400" height="900" viewBox="0 0 1400 900"
+<svg width="1400" height="945" viewBox="0 0 1400 945"
   xmlns="http://www.w3.org/2000/svg">
 
   <!-- ═══════════════════════════════════════════════════ DEFS ════ -->
@@ -114,7 +114,7 @@
   </style>
 
   <!-- ═══════════════════════════════════════════ BACKGROUND ══════ -->
-  <rect width="1400" height="900" fill="url(#bg)"/>
+  <rect width="1400" height="945" fill="url(#bg)"/>
   <g opacity=".04">
     <line x1="0" y1="100" x2="1400" y2="100" stroke="#94a3b8"/>
     <line x1="0" y1="200" x2="1400" y2="200" stroke="#94a3b8"/>
@@ -126,6 +126,10 @@
     <line x1="0" y1="800" x2="1400" y2="800" stroke="#94a3b8"/>
   </g>
 
+  <!-- ══════════════════════════════ TOPIC TITLE ══════════════════ -->
+  <text x="700" y="32" text-anchor="middle" font-family="'SF Mono','Fira Code','Consolas',monospace"
+        font-size="24" font-weight="700" fill="#f1f5f9" letter-spacing="1px">Multi-Head Latent Attention (MLA) with RoPE Integration</text>
+  <line x1="200" y1="42" x2="1200" y2="42" stroke="#334155" stroke-width="1" opacity=".4"/>
 
   <!-- ════════════════════════════ SECTION HEADERS (top labels) ═══ -->
   <text x="195" y="55" text-anchor="middle" class="section-title">Compression</text>

@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 2600" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="2750" viewBox="0 0 1400 2750" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif">
   <defs>
     <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" style="stop-color:#0a0a1a"/><stop offset="100%" style="stop-color:#0d1117"/>
@@ -29,8 +29,8 @@
     </pattern>
   </defs>
 
-  <rect width="1400" height="2600" fill="url(#bgGrad)"/>
-  <rect width="1400" height="2600" fill="url(#dots)"/>
+  <rect width="1400" height="2750" fill="url(#bgGrad)"/>
+  <rect width="1400" height="2750" fill="url(#dots)"/>
 
   <!-- HEADER -->
   <rect x="40" y="30" width="1320" height="130" rx="18" fill="url(#headerGrad)" filter="url(#shadow)"/>
@@ -43,11 +43,11 @@
   <text x="1210" y="85" text-anchor="middle" fill="#43e97b" font-size="13" font-weight="bold">NUMERICAL STABILITY</text>
 
   <!-- THE PROBLEM -->
-  <rect x="40" y="190" width="1320" height="320" rx="14" fill="#111128" filter="url(#shadow)"/>
-  <rect x="40" y="190" width="1320" height="320" rx="14" fill="none" stroke="#e74c3c" stroke-width="1.5" opacity="0.4"/>
+  <rect x="40" y="190" width="1320" height="380" rx="14" fill="#111128" filter="url(#shadow)"/>
+  <rect x="40" y="190" width="1320" height="380" rx="14" fill="none" stroke="#e74c3c" stroke-width="1.5" opacity="0.4"/>
   <rect x="40" y="190" width="1320" height="45" rx="14" fill="#e74c3c" opacity="0.08"/>
   <rect x="40" y="222" width="1320" height="13" fill="#111128"/>
-  <text x="80" y="220" fill="#e74c3c" font-size="20" font-weight="bold">⚠ The Problem: Low-Precision Accumulation Errors</text>
+  <text x="80" y="220" fill="#e74c3c" font-size="20" font-weight="bold">The Problem: Low-Precision Accumulation Errors</text>
 
   <text x="80" y="260" fill="#ddd" font-size="14">A dot product — the core computation in every GEMM — involves summing hundreds or thousands of products:</text>
   <rect x="80" y="275" width="900" height="50" rx="8" fill="#0a0a20" stroke="#e74c3c" stroke-width="1.5"/>
@@ -78,29 +78,29 @@
   </g>
 
   <!-- Catastrophic Cancellation Box -->
-  <rect x="80" y="495" width="1240" height="58" rx="8" fill="#2a0a0a" stroke="#e74c3c" stroke-width="1.5"/>
+  <rect x="80" y="495" width="1240" height="65" rx="8" fill="#2a0a0a" stroke="#e74c3c" stroke-width="1.5"/>
   <text x="100" y="520" fill="#e74c3c" font-size="13" font-weight="bold">Catastrophic Cancellation:</text>
   <text x="310" y="520" fill="#ddd" font-size="13">Adding two nearly-equal numbers and subtracting → significant digits cancel out.</text>
   <text x="100" y="542" fill="#ddd" font-size="12">In BF16: (1.0000001 - 1.0000000) = 0 due to limited mantissa bits. Correct result should be 1×10⁻⁷.</text>
 
   <!-- THE SOLUTION: FP32 ACCUMULATION -->
-  <rect x="40" y="540" width="1320" height="680" rx="14" fill="#111128" filter="url(#shadow)"/>
-  <rect x="40" y="540" width="1320" height="680" rx="14" fill="none" stroke="#43e97b" stroke-width="2" opacity="0.5"/>
-  <rect x="40" y="540" width="1320" height="48" rx="14" fill="#43e97b" opacity="0.08"/>
-  <rect x="40" y="574" width="1320" height="14" fill="#111128"/>
-  <circle cx="80" cy="564" r="16" fill="#43e97b" opacity="0.3" stroke="#43e97b" stroke-width="1.5"/>
-  <text x="80" y="570" text-anchor="middle" fill="#fff" font-size="14" font-weight="bold">✓</text>
-  <text x="110" y="572" fill="#43e97b" font-size="20" font-weight="bold">DeepSeek Solution: FP32 Accumulation with WGMMA</text>
+  <rect x="40" y="595" width="1320" height="680" rx="14" fill="#111128" filter="url(#shadow)"/>
+  <rect x="40" y="595" width="1320" height="680" rx="14" fill="none" stroke="#43e97b" stroke-width="2" opacity="0.5"/>
+  <rect x="40" y="595" width="1320" height="48" rx="14" fill="#43e97b" opacity="0.08"/>
+  <rect x="40" y="629" width="1320" height="14" fill="#111128"/>
+  <circle cx="80" cy="619" r="16" fill="#43e97b" opacity="0.3" stroke="#43e97b" stroke-width="1.5"/>
+  <text x="80" y="625" text-anchor="middle" fill="#fff" font-size="14" font-weight="bold"></text>
+  <text x="110" y="627" fill="#43e97b" font-size="20" font-weight="bold">DeepSeek Solution: FP32 Accumulation with WGMMA</text>
 
   <!-- Big insight box -->
-  <rect x="80" y="600" width="1240" height="64" rx="10" fill="#0a2a1a" stroke="#43e97b" stroke-width="2"/>
-  <text x="700" y="630" text-anchor="middle" fill="#43e97b" font-size="15" font-weight="bold">FP8 inputs for multiply speed + FP32 accumulation for precision</text>
-  <text x="700" y="652" text-anchor="middle" fill="#ddd" font-size="12">Products of FP8 × FP8 are immediately promoted to FP32 before being added to the accumulator</text>
+  <rect x="80" y="655" width="1240" height="64" rx="10" fill="#0a2a1a" stroke="#43e97b" stroke-width="2"/>
+  <text x="700" y="685" text-anchor="middle" fill="#43e97b" font-size="15" font-weight="bold">FP8 inputs for multiply speed + FP32 accumulation for precision</text>
+  <text x="700" y="707" text-anchor="middle" fill="#ddd" font-size="12">Products of FP8 × FP8 are immediately promoted to FP32 before being added to the accumulator</text>
 
   <!-- Detailed flow diagram -->
-  <text x="80" y="700" fill="#8b8baa" font-size="14" font-weight="bold">ACCUMULATION PIPELINE WITHIN TENSOR CORES:</text>
+  <text x="80" y="755" fill="#8b8baa" font-size="14" font-weight="bold">ACCUMULATION PIPELINE WITHIN TENSOR CORES:</text>
 
-  <g transform="translate(80, 720)">
+  <g transform="translate(80, 775)">
     <!-- FP8 A vector -->
     <rect x="0" y="30" width="160" height="100" rx="10" fill="#2a0a0a" stroke="url(#fp8Grad)" stroke-width="2"/>
     <text x="80" y="57" text-anchor="middle" fill="#ff6b6b" font-size="13" font-weight="bold">Vector A</text>
@@ -151,20 +151,20 @@
   </g>
 
   <!-- Labels under flow -->
-  <rect x="80" y="1010" width="1240" height="55" rx="8" fill="#0a0a20" stroke="#555" stroke-width="1"/>
-  <text x="100" y="1035" fill="#8b8baa" font-size="11">Note: FP8 × FP8 multiply produces a higher-precision intermediate result. DeepSeek uses this intermediate result</text>
-  <text x="100" y="1054" fill="#8b8baa" font-size="11">in FP32 accumulation — getting FP8 throughput while maintaining FP32 accuracy for the summation step.</text>
+  <rect x="80" y="1065" width="1240" height="55" rx="8" fill="#0a0a20" stroke="#555" stroke-width="1"/>
+  <text x="100" y="1090" fill="#8b8baa" font-size="11">Note: FP8 × FP8 multiply produces a higher-precision intermediate result. DeepSeek uses this intermediate result</text>
+  <text x="100" y="1109" fill="#8b8baa" font-size="11">in FP32 accumulation — getting FP8 throughput while maintaining FP32 accuracy for the summation step.</text>
 
   <!-- WGMMA HARDWARE SECTION -->
-  <rect x="40" y="1250" width="1320" height="440" rx="14" fill="#111128" filter="url(#shadow)"/>
-  <rect x="40" y="1250" width="1320" height="440" rx="14" fill="none" stroke="#667eea" stroke-width="1.5" opacity="0.4"/>
-  <rect x="40" y="1250" width="1320" height="48" rx="14" fill="#667eea" opacity="0.08"/>
-  <rect x="40" y="1284" width="1320" height="14" fill="#111128"/>
-  <text x="80" y="1282" fill="#667eea" font-size="20" font-weight="bold">🖥 Hardware Implementation: WGMMA on NVIDIA Hopper (H100)</text>
+  <rect x="40" y="1300" width="1320" height="440" rx="14" fill="#111128" filter="url(#shadow)"/>
+  <rect x="40" y="1300" width="1320" height="440" rx="14" fill="none" stroke="#667eea" stroke-width="1.5" opacity="0.4"/>
+  <rect x="40" y="1300" width="1320" height="48" rx="14" fill="#667eea" opacity="0.08"/>
+  <rect x="40" y="1334" width="1320" height="14" fill="#111128"/>
+  <text x="80" y="1332" fill="#667eea" font-size="20" font-weight="bold">Hardware Implementation: WGMMA on NVIDIA Hopper (H100)</text>
 
-  <text x="80" y="1330" fill="#ddd" font-size="13">WGMMA = <tspan fill="#4facfe" font-weight="bold">W</tspan>arp<tspan fill="#4facfe" font-weight="bold">g</tspan>roup <tspan fill="#4facfe" font-weight="bold">M</tspan>atrix <tspan fill="#4facfe" font-weight="bold">M</tspan>ultiply <tspan fill="#4facfe" font-weight="bold">A</tspan>ccumulate — a specialized hardware instruction on H100 GPUs</text>
+  <text x="80" y="1380" fill="#ddd" font-size="13">WGMMA = <tspan fill="#4facfe" font-weight="bold">W</tspan>arp<tspan fill="#4facfe" font-weight="bold">g</tspan>roup <tspan fill="#4facfe" font-weight="bold">M</tspan>atrix <tspan fill="#4facfe" font-weight="bold">M</tspan>ultiply <tspan fill="#4facfe" font-weight="bold">A</tspan>ccumulate — a specialized hardware instruction on H100 GPUs</text>
 
-  <g transform="translate(80, 1360)">
+  <g transform="translate(80, 1410)">
     <!-- H100 die diagram simplified -->
     <rect x="0" y="0" width="500" height="300" rx="12" fill="#0a0a20" stroke="#667eea" stroke-width="2"/>
     <text x="250" y="28" text-anchor="middle" fill="#667eea" font-size="15" font-weight="bold">NVIDIA H100 — Tensor Core</text>
@@ -204,7 +204,7 @@
   </g>
 
   <!-- WGMMA properties -->
-  <g transform="translate(630, 1360)">
+  <g transform="translate(630, 1410)">
     <rect x="0" y="0" width="730" height="130" rx="10" fill="#0a0a20" stroke="#667eea" stroke-width="1.5"/>
     <text x="20" y="27" fill="#667eea" font-size="14" font-weight="bold">WGMMA Instruction Properties</text>
     <line x1="20" y1="35" x2="700" y2="35" stroke="#667eea" stroke-width="1" opacity="0.3"/>
@@ -234,13 +234,13 @@
   </g>
 
   <!-- WHY THIS MATTERS FOR TRAINING -->
-  <rect x="40" y="1720" width="1320" height="360" rx="14" fill="#111128" filter="url(#shadow)"/>
-  <rect x="40" y="1720" width="1320" height="360" rx="14" fill="none" stroke="#43e97b" stroke-width="1" opacity="0.3"/>
-  <text x="80" y="1760" fill="#c8c8e8" font-size="18" font-weight="bold">Why FP32 Accumulation Is Critical for Training</text>
-  <line x1="80" y1="1772" x2="560" y2="1772" stroke="url(#accent1)" stroke-width="2" opacity="0.5"/>
+  <rect x="40" y="1770" width="1320" height="370" rx="14" fill="#111128" filter="url(#shadow)"/>
+  <rect x="40" y="1770" width="1320" height="370" rx="14" fill="none" stroke="#43e97b" stroke-width="1" opacity="0.3"/>
+  <text x="80" y="1810" fill="#c8c8e8" font-size="18" font-weight="bold">Why FP32 Accumulation Is Critical for Training</text>
+  <line x1="80" y1="1822" x2="560" y2="1822" stroke="url(#accent1)" stroke-width="2" opacity="0.5"/>
 
-  <g transform="translate(80, 1790)">
-    <rect x="0" y="0" width="590" height="260" rx="10" fill="#1a0a0a" stroke="#e74c3c" stroke-width="1.5"/>
+  <g transform="translate(80, 1840)">
+    <rect x="0" y="0" width="590" height="280" rx="10" fill="#1a0a0a" stroke="#e74c3c" stroke-width="1.5"/>
     <text x="20" y="28" fill="#e74c3c" font-size="14" font-weight="bold">Without FP32 Accumulation</text>
     <text x="20" y="55" fill="#ddd" font-size="12">1. Large layer = more terms in dot product</text>
     <text x="20" y="78" fill="#ddd" font-size="12">2. BF16 accumulation: 7-bit mantissa = 128 levels</text>
@@ -250,10 +250,10 @@
     <text x="20" y="173" fill="#999" font-size="11">• Small weight updates rounded to zero</text>
     <text x="20" y="193" fill="#999" font-size="11">• Training loss becomes unstable or diverges</text>
     <text x="20" y="213" fill="#999" font-size="11">• Model quality significantly degraded</text>
-    <rect x="20" y="228" width="550" height="25" rx="4" fill="#2a0a0a" stroke="#e74c3c" stroke-width="1"/>
-    <text x="295" y="245" text-anchor="middle" fill="#e74c3c" font-size="11" font-weight="bold">Training may fail or produce poor models</text>
+    <rect x="20" y="238" width="550" height="25" rx="4" fill="#2a0a0a" stroke="#e74c3c" stroke-width="1"/>
+    <text x="295" y="255" text-anchor="middle" fill="#e74c3c" font-size="11" font-weight="bold">Training may fail or produce poor models</text>
 
-    <rect x="640" y="0" width="590" height="260" rx="10" fill="#0a2a1a" stroke="#43e97b" stroke-width="1.5"/>
+    <rect x="640" y="0" width="590" height="280" rx="10" fill="#0a2a1a" stroke="#43e97b" stroke-width="1.5"/>
     <text x="660" y="28" fill="#43e97b" font-size="14" font-weight="bold">With FP32 Accumulation (DeepSeek)</text>
     <text x="660" y="55" fill="#ddd" font-size="12">1. Large layer = more terms in dot product</text>
     <text x="660" y="78" fill="#ddd" font-size="12">2. FP32 accumulation: 23-bit mantissa = 8M levels</text>
@@ -263,48 +263,48 @@
     <text x="660" y="173" fill="#ddd" font-size="11">• Tiny weight updates preserved (no vanishing)</text>
     <text x="660" y="193" fill="#ddd" font-size="11">• Training remains stable throughout</text>
     <text x="660" y="213" fill="#ddd" font-size="11">• Model quality matches BF16-only baseline</text>
-    <rect x="660" y="228" width="550" height="25" rx="4" fill="#0a2a1a" stroke="#43e97b" stroke-width="1.5"/>
-    <text x="935" y="245" text-anchor="middle" fill="#43e97b" font-size="11" font-weight="bold">Same quality as FP32, with FP8 speed!</text>
+    <rect x="660" y="238" width="550" height="25" rx="4" fill="#0a2a1a" stroke="#43e97b" stroke-width="1.5"/>
+    <text x="935" y="255" text-anchor="middle" fill="#43e97b" font-size="11" font-weight="bold">Same quality as FP32, with FP8 speed!</text>
   </g>
 
   <!-- KEY TAKEAWAYS -->
-  <rect x="40" y="2110" width="1320" height="460" rx="14" fill="url(#headerGrad)" filter="url(#shadow)"/>
-  <rect x="40" y="2110" width="1320" height="460" rx="14" fill="none" stroke="url(#accent1)" stroke-width="1" opacity="0.4"/>
-  <text x="700" y="2150" text-anchor="middle" fill="#fff" font-size="20" font-weight="bold">Key Takeaways — Accumulation Precision</text>
+  <rect x="40" y="2160" width="1320" height="500" rx="14" fill="url(#headerGrad)" filter="url(#shadow)"/>
+  <rect x="40" y="2160" width="1320" height="500" rx="14" fill="none" stroke="url(#accent1)" stroke-width="1" opacity="0.4"/>
+  <text x="700" y="2200" text-anchor="middle" fill="#fff" font-size="20" font-weight="bold">Key Takeaways — Accumulation Precision</text>
 
-  <g transform="translate(80, 2170)">
+  <g transform="translate(80, 2220)">
     <rect x="0" y="0" width="595" height="75" rx="8" fill="#0a0a20" stroke="#43e97b" stroke-width="1.5"/>
-    <text x="20" y="24" fill="#43e97b" font-size="13" font-weight="bold">✓ Strategy: Best of Both Worlds</text>
+    <text x="20" y="24" fill="#43e97b" font-size="13" font-weight="bold">Strategy: Best of Both Worlds</text>
     <text x="20" y="48" fill="#8b8baa" font-size="11">FP8 multiply = fast throughput</text>
     <text x="20" y="65" fill="#8b8baa" font-size="11">FP32 accumulate = accurate summation</text>
 
     <rect x="625" y="0" width="595" height="75" rx="8" fill="#0a0a20" stroke="#667eea" stroke-width="1.5"/>
-    <text x="645" y="24" fill="#667eea" font-size="13" font-weight="bold">🖥 Hardware: H100 WGMMA Instruction</text>
+    <text x="645" y="24" fill="#667eea" font-size="13" font-weight="bold">Hardware: H100 WGMMA Instruction</text>
     <text x="645" y="48" fill="#8b8baa" font-size="11">Native silicon support — zero software overhead.</text>
     <text x="645" y="65" fill="#8b8baa" font-size="11">Both operations happen in a single hardware cycle.</text>
 
     <rect x="0" y="90" width="595" height="75" rx="8" fill="#0a0a20" stroke="#ffa502" stroke-width="1.5"/>
-    <text x="20" y="114" fill="#ffa502" font-size="13" font-weight="bold">📐 Scope: Per 1×128 Block</text>
+    <text x="20" y="114" fill="#ffa502" font-size="13" font-weight="bold">Scope: Per 1×128 Block</text>
     <text x="20" y="138" fill="#8b8baa" font-size="11">Matches fine-grained group size (Section 3).</text>
     <text x="20" y="155" fill="#8b8baa" font-size="11">Each 128-element dot product accumulated in FP32.</text>
 
     <rect x="625" y="90" width="595" height="75" rx="8" fill="#0a0a20" stroke="#ff6b6b" stroke-width="1.5"/>
-    <text x="645" y="114" fill="#ff6b6b" font-size="13" font-weight="bold">⚡ Performance: No Speed Cost</text>
+    <text x="645" y="114" fill="#ff6b6b" font-size="13" font-weight="bold">Performance: No Speed Cost</text>
     <text x="645" y="138" fill="#8b8baa" font-size="11">FP32 accumulation is done in tensor core registers.</text>
     <text x="645" y="155" fill="#8b8baa" font-size="11">Does not require external memory access — free!</text>
 
     <rect x="0" y="180" width="595" height="75" rx="8" fill="#0a0a20" stroke="#4facfe" stroke-width="1.5"/>
-    <text x="20" y="204" fill="#4facfe" font-size="13" font-weight="bold">🔗 Integration: Complements Other Techniques</text>
+    <text x="20" y="204" fill="#4facfe" font-size="13" font-weight="bold">Integration: Complements Other Techniques</text>
     <text x="20" y="228" fill="#8b8baa" font-size="11">Works alongside fine-grained scaling (Section 3).</text>
     <text x="20" y="245" fill="#8b8baa" font-size="11">Together they ensure quality at every quantization step.</text>
 
     <rect x="625" y="180" width="595" height="75" rx="8" fill="#0a0a20" stroke="#a18cd1" stroke-width="1.5"/>
-    <text x="645" y="204" fill="#a18cd1" font-size="13" font-weight="bold">📈 Result: Stable Loss Curves</text>
+    <text x="645" y="204" fill="#a18cd1" font-size="13" font-weight="bold">Result: Stable Loss Curves</text>
     <text x="645" y="228" fill="#8b8baa" font-size="11">DeepSeek's FP8 training shows no loss spikes.</text>
     <text x="645" y="245" fill="#8b8baa" font-size="11">Convergence curve matches high-precision baselines.</text>
 
-    <rect x="0" y="270" width="1220" height="55" rx="8" fill="#0a2a1a" stroke="#43e97b" stroke-width="2"/>
-    <text x="610" y="297" text-anchor="middle" fill="#43e97b" font-size="14" font-weight="bold">FP8 compute + FP32 accumulate + Hardware WGMMA = Speed AND Accuracy</text>
-    <text x="610" y="316" text-anchor="middle" fill="#8b8baa" font-size="11">This is what makes DeepSeek's FP8 training a first-class alternative to BF16 training</text>
+    <rect x="0" y="360" width="1220" height="55" rx="8" fill="#0a2a1a" stroke="#43e97b" stroke-width="2"/>
+    <text x="610" y="387" text-anchor="middle" fill="#43e97b" font-size="14" font-weight="bold">FP8 compute + FP32 accumulate + Hardware WGMMA = Speed AND Accuracy</text>
+    <text x="610" y="406" text-anchor="middle" fill="#8b8baa" font-size="11">This is what makes DeepSeek's FP8 training a first-class alternative to BF16 training</text>
   </g>
 </svg>

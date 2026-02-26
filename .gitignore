@@ -62,3 +62,5 @@ datasets/
 # Logs
 *.log
 logs/
+deepseek_visual_guide.pdf
+merge_pdf.py
